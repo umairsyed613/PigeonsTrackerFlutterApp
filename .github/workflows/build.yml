@@ -4,20 +4,10 @@ on:
   push:
     branches:
       - main
-  pull_request:
-    branches:
-      - main
 
 jobs:
   build:
     runs-on: ubuntu-latest
-
-    services:
-      firebase:
-        image: google/cloud-sdk:slim
-        options: --mount type=bind,source=$GITHUB_WORKSPACE,target=/workspace
-        ports:
-          - 8085:8085
 
     steps:
     - name: Checkout Repository
