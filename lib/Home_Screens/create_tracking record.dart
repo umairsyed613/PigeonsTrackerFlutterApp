@@ -56,6 +56,7 @@ class _TrackingRecordState extends State<TrackingRecord> {
       },
       child: SafeArea(
         child: Scaffold(
+          backgroundColor: Colors.white,
           key: _scaffoldKey,
           appBar: AppBar(
             title: Row(

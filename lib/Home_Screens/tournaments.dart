@@ -21,6 +21,7 @@ class _TournamentsState extends State<Tournaments> {
       },
       child: SafeArea(
           child: Scaffold(
+            backgroundColor: Colors.white,
             key: _scaffoldKey,
             appBar: AppBar(
               title: Row(

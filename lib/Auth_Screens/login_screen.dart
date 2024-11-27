@@ -22,6 +22,7 @@ class _LoginScreenState extends State<LoginScreen> {
         return true; // Allow navigation
       },
       child: Scaffold(
+        backgroundColor: Colors.white,
         key: _scaffoldKey,
         appBar: AppBar(
           title: Row(
@@ -65,52 +66,55 @@ class _LoginScreenState extends State<LoginScreen> {
                           color: Colors.white,
                         )),
                     IconButton(
-                      onPressed: () =>
-                          showDialog(
-                            context: context,
-                            builder: (context) {
-                              return AlertDialog(
-                                icon: IconButton(onPressed: (){},
-                                    icon: Icon(Icons.cancel_outlined,
-                                      color: Colors.black,)),
-                                title: Text(
-                                  "Language Change",
-                                  style: TextStyle(
-                                      fontSize: 15,
-                                      fontWeight: FontWeight.bold,
-                                      color: Colors.pinkAccent),
-                                ),
-                                contentPadding: EdgeInsets.symmetric(horizontal: 24.0, vertical: 10.0),
-                                actionsPadding: EdgeInsets.symmetric(horizontal: 10.0),
-                                actions: [
-                                  Row(
-                                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                                    children: <Widget>[
-                                      Expanded(
-                                        child: RadioMenuButton(
-                                          value: 0,
-                                          groupValue: _groupValue,
-                                          onChanged: (int? newValue) =>
-                                              setState(() =>
-                                              _groupValue = newValue!),
-                                          child: Text('English'),
-                                        ),
-                                      ),
-                                      Expanded(
-                                        child: RadioMenuButton(
-                                            value: 1,
-                                            groupValue: _groupValue,
-                                            onChanged: (int? newValue) =>
-                                                setState(() =>
-                                                _groupValue = newValue!),
-                                            child: Text('Urdu')),
-                                      ),
-                                    ],
+                      onPressed: () => showDialog(
+                        context: context,
+                        builder: (context) {
+                          return AlertDialog(
+                            icon: IconButton(
+                                onPressed: () {},
+                                icon: Icon(
+                                  Icons.cancel_outlined,
+                                  color: Colors.black,
+                                )),
+                            title: Text(
+                              "Language Change",
+                              style: TextStyle(
+                                  fontSize: 15,
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.pinkAccent),
+                            ),
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: 24.0, vertical: 10.0),
+                            actionsPadding:
+                                EdgeInsets.symmetric(horizontal: 10.0),
+                            actions: [
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: RadioMenuButton(
+                                      value: 0,
+                                      groupValue: _groupValue,
+                                      onChanged: (int? newValue) => setState(
+                                          () => _groupValue = newValue!),
+                                      child: Text('English'),
+                                    ),
+                                  ),
+                                  Expanded(
+                                    child: RadioMenuButton(
+                                        value: 1,
+                                        groupValue: _groupValue,
+                                        onChanged: (int? newValue) => setState(
+                                            () => _groupValue = newValue!),
+                                        child: Text('Urdu')),
                                   ),
                                 ],
-                              );
-                            },
-                          ),
+                              ),
+                            ],
+                          );
+                        },
+                      ),
                       icon: Icon(
                         Icons.language,
                         color: Colors.white,

@@ -23,6 +23,7 @@ class _DiseasesCureState extends State<DiseasesCure> {
       },
       child: SafeArea(
           child: Scaffold(
+            backgroundColor: Colors.white,
             key: _scaffoldKey,
             appBar: AppBar(
               title: Row(

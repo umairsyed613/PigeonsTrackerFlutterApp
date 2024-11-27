@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:pigeon_tracker/Auth_Screens/contact_screen.dart';
+import 'package:pigeon_tracker/Auth_Screens/information_screen.dart';
 import 'package:pigeon_tracker/Auth_Screens/login_screen.dart';
+import 'package:pigeon_tracker/Auth_Screens/setting_screen.dart';
 import 'package:pigeon_tracker/Home_Screens/diseases_cure.dart';
 import 'package:pigeon_tracker/Home_Screens/my_tournaments.dart';
 import 'package:pigeon_tracker/Home_Screens/practice.dart';
@@ -44,6 +47,7 @@ class _HomeScreenState extends State<HomeScreen> {
       },
       child: SafeArea(
         child: Scaffold(
+          backgroundColor: Colors.white,
           key: _scaffoldKey,
           appBar: AppBar(
             title: Row(
@@ -119,6 +123,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   height: 20,
                 ),
                 ListTile(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => HomeScreen()));
+                  },
                   tileColor: Colors.grey[350],
                   title: Text(
                     'Home',
@@ -132,6 +140,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 ListTile(
+                  onTap: () {
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => Tournaments()));
+                  },
                   title: Text(
                     'Tournaments',
                     style: TextStyle(color: Colors.black),
@@ -142,7 +154,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 ListTile(
-                  leading: Icon(Icons.directions_run,color: Colors.grey[600],),
+                  leading: Icon(
+                    Icons.directions_run,
+                    color: Colors.grey[600],
+                  ),
                   title: Text('Private'),
                   trailing: IconButton(
                     icon: Icon(
@@ -160,18 +175,32 @@ class _HomeScreenState extends State<HomeScreen> {
                     child: Column(
                       children: [
                         ListTile(
-                          leading: Icon(Icons.monitor_heart,color: Colors.grey[600],),
+                          leading: Icon(
+                            Icons.monitor_heart,
+                            color: Colors.grey[600],
+                          ),
                           title: Text('Practice'),
                           onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => Practice()));
                             setState(() {
                               isExpanded = false;
                             });
                           },
                         ),
                         ListTile(
-                          leading: Icon(Icons.grid_view,color: Colors.grey[600],),
+                          leading: Icon(
+                            Icons.grid_view,
+                            color: Colors.grey[600],
+                          ),
                           title: Text('My Tournaments'),
                           onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => MyTournaments()));
                             setState(() {
                               isExpanded = false;
                             });
@@ -181,6 +210,12 @@ class _HomeScreenState extends State<HomeScreen> {
                     ),
                   ),
                 ListTile(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DiseasesCure()));
+                  },
                   title: Text(
                     'Diseases And Cure',
                     style: TextStyle(color: Colors.black),
@@ -191,6 +226,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 ListTile(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => InformationScreen()));
+                  },
                   title: Text(
                     'Information',
                     style: TextStyle(color: Colors.black),
@@ -201,6 +242,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 ListTile(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ContactScreen()));
+                  },
                   title: Text(
                     'Contact',
                     style: TextStyle(color: Colors.black),
@@ -211,6 +258,12 @@ class _HomeScreenState extends State<HomeScreen> {
                   ),
                 ),
                 ListTile(
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SettingScreen()));
+                  },
                   title: Text(
                     'Setting',
                     style: TextStyle(color: Colors.black),

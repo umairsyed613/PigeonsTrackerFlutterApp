@@ -14,6 +14,7 @@ class _AddDiseasesState extends State<AddDiseases> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+          backgroundColor: Colors.white,
       key: _scaffoldKey,
       appBar: AppBar(
         title: Row(

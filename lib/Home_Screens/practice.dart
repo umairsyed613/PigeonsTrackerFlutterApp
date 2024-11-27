@@ -22,6 +22,7 @@ class _PracticeState extends State<Practice> {
       },
       child: SafeArea(
           child: Scaffold(
+            backgroundColor: Colors.white,
             key: _scaffoldKey,
             appBar: AppBar(
               title: Row(
