@@ -16,8 +16,11 @@ class SettingScreen extends StatefulWidget {
 }
 
 class _SettingScreenState extends State<SettingScreen> {
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _loftNameController = TextEditingController();
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool isExpanded = false;
+
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -28,7 +31,9 @@ class _SettingScreenState extends State<SettingScreen> {
         }
         return true; // Allow navigation
       },
-      child: SafeArea(child: Scaffold(
+      child: SafeArea(
+          child: Scaffold(
+        key: _scaffoldKey,
         backgroundColor: Colors.white,
         appBar: AppBar(
           title: Row(
@@ -141,8 +146,8 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
                 title: Text('Private'),
                 trailing: IconButton(
-                  icon: Icon(
-                      isExpanded ? Icons.expand_less : Icons.expand_more),
+                  icon:
+                      Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
                   onPressed: () {
                     setState(() {
                       isExpanded = !isExpanded; // Toggle expansion
@@ -192,10 +197,8 @@ class _SettingScreenState extends State<SettingScreen> {
                 ),
               ListTile(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => DiseasesCure()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => DiseasesCure()));
                 },
                 title: Text(
                   'Diseases And Cure',
@@ -224,10 +227,8 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
               ListTile(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => ContactScreen()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => ContactScreen()));
                 },
                 title: Text(
                   'Contact',
@@ -240,10 +241,8 @@ class _SettingScreenState extends State<SettingScreen> {
               ),
               ListTile(
                 onTap: () {
-                  Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                          builder: (context) => SettingScreen()));
+                  Navigator.push(context,
+                      MaterialPageRoute(builder: (context) => SettingScreen()));
                 },
                 title: Text(
                   'Setting',
@@ -258,6 +257,69 @@ class _SettingScreenState extends State<SettingScreen> {
           ),
           width: 250,
           backgroundColor: Colors.white,
+        ),
+        body: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(right: 280.0),
+                  child: Text(
+                    'Setting',
+                    style: TextStyle(
+                        fontSize: 25,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.pinkAccent),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 55.0,left: 20,right: 20),
+                  child: TextFormField(
+                    controller: _loftNameController,
+                    maxLength: 8, // Limiting input to 8 characters
+                    decoration: InputDecoration(
+                      hintText: "Loft Name",
+                      counterText: "Max: 8 characters", // Character limit hint
+                      border:UnderlineInputBorder(),
+                    ),
+                    validator: (value) {
+                      if (value == null || value.isEmpty) {
+                        return 'This field is required.';
+                      }
+                      if (value.length > 8) {
+                        return 'Maximum 8 characters allowed.';
+                      }
+                      return null;
+                    },
+                  ),
+                ),
+                const SizedBox(height: 20),
+                Padding(
+                  padding: const EdgeInsets.only(left: 250.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      if (_formKey.currentState!.validate()) {
+                        // Save action here
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text("Saved successfully!")),
+                        );
+                      }
+                    },
+                    style: ElevatedButton.styleFrom(
+                      elevation: 2,
+                      backgroundColor: Color.fromRGBO(56, 0, 109, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    child: const Text("SAVE",style: TextStyle(color: Colors.white),),
+                  ),
+                ),
+              ],
+            ),
+          ),
         ),
       )),
     );
