@@ -8,6 +8,7 @@ import 'package:pigeon_tracker/Home_Screens/my_tournaments.dart';
 import 'package:pigeon_tracker/Home_Screens/practice.dart';
 import 'package:pigeon_tracker/Home_Screens/tournaments.dart';
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
+import 'package:get/get.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -17,6 +18,46 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  builddialog(BuildContext context){
+    showDialog(
+        context: context,
+        builder: (builder){
+          return AlertDialog(
+            title: Text('Choose a Language'),
+            content: Container(
+              width: double.maxFinite,
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemBuilder: (context,index){
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                      onTap: (){
+                        updatelanguage(locale[index]['locale']);
+                      },
+                        child: Text(locale[index]['name'])),
+                  );
+                },
+                separatorBuilder: (context,index){
+                  return Divider(
+                    color: Colors.black,
+                  );
+                },
+                itemCount: locale.length,
+              ),
+            ),
+          );
+        }
+    );
+  }
+  final List locale = [
+    {'name':'ENGLISH','locale':Locale('en','US')},
+    {'name':'اردو','locale':Locale('ur','PK')},
+  ];
+  updatelanguage(Locale locale){
+  Get.back();
+  Get.updateLocale(locale);
+  }
   bool isExpanded = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final videoUrl = "https://www.youtube.com/watch?v=vMUXNhz7TYg";
@@ -56,7 +97,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 Row(
                   children: [
                     Text(
-                      'PigeonsTracker',
+                      'Pg text'.tr,
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -91,7 +132,9 @@ class _HomeScreenState extends State<HomeScreen> {
                             color: Colors.white,
                           )),
                       IconButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            builddialog(context);
+                          },
                           icon: Icon(
                             Icons.language,
                             color: Colors.white,
@@ -287,7 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        "Follow Your Pigeons!",
+                        'follow text!'.tr,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 30,
