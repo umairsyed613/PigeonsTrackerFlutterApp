@@ -330,7 +330,7 @@ class _HomeScreenState extends State<HomeScreen> {
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       Text(
-                        'follow text!'.tr,
+                        'follow text'.tr,
                         style: TextStyle(
                             fontWeight: FontWeight.bold,
                             fontSize: 30,
