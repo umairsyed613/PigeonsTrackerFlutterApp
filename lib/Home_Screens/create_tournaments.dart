@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:get/get_core/src/get_main.dart';
 import 'package:pigeon_tracker/Auth_Screens/login_screen.dart';
 import 'package:pigeon_tracker/Home_Screens/my_tournaments.dart';
 import 'package:sqflite/sqflite.dart';
@@ -11,6 +13,46 @@ class CreateTournaments extends StatefulWidget {
 }
 
 class _CreateTournamentsState extends State<CreateTournaments> {
+  builddialog(BuildContext context){
+    showDialog(
+        context: context,
+        builder: (builder){
+          return AlertDialog(
+            title: Text('Choose a Language',style: TextStyle(fontWeight: FontWeight.bold),),
+            content: Container(
+              width: double.maxFinite,
+              child: ListView.separated(
+                shrinkWrap: true,
+                itemBuilder: (context,index){
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: GestureDetector(
+                        onTap: (){
+                          updatelanguage(locale[index]['locale']);
+                        },
+                        child: Text(locale[index]['name'])),
+                  );
+                },
+                separatorBuilder: (context,index){
+                  return Divider(
+                    color: Colors.black,
+                  );
+                },
+                itemCount: locale.length,
+              ),
+            ),
+          );
+        }
+    );
+  }
+  final List locale = [
+    {'name':'ENGLISH','locale':Locale('en','US')},
+    {'name':'اردو','locale':Locale('ur','PK')},
+  ];
+  updatelanguage(Locale locale){
+    Get.back();
+    Get.updateLocale(locale);
+  }
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   final DatabaseHelper dbHelper = DatabaseHelper();
@@ -83,162 +125,169 @@ class _CreateTournamentsState extends State<CreateTournaments> {
         return true;
       },
       child: SafeArea(
-        child: Scaffold(
-          backgroundColor: Colors.white,
-          key: _scaffoldKey,
-          appBar: AppBar(
-            title: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Row(
+        child: Directionality(
+          textDirection: Locale == 'en'
+              ? TextDirection.rtl
+              : TextDirection.ltr,
+          child: Scaffold(
+            backgroundColor: Colors.white,
+            key: _scaffoldKey,
+            appBar: AppBar(
+              title: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Row(
+                    children: [
+                      Text(
+                        'PigeonsTracker',
+                        style: TextStyle(
+                            color: Colors.white,
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold),
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 20.0),
+                        child: Text(
+                          ' (v3.25)',
+                          style: TextStyle(
+                            color: Colors.white.withOpacity(0.7),
+                            fontSize: 12,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 18.0),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        IconButton(
+                            onPressed: () {
+                              Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                      builder: (context) => LoginScreen()));
+                            },
+                            icon: Icon(
+                              Icons.logout,
+                              color: Colors.white,
+                            )),
+                        IconButton(
+                            onPressed: () {
+                              builddialog(context);
+                            },
+                            icon: Icon(
+                              Icons.language,
+                              color: Colors.white,
+                            )),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+              iconTheme: IconThemeData(
+                color: Colors.white, // Drawer icon color
+              ),
+              backgroundColor: Color.fromRGBO(56, 0, 109, 1),
+              elevation: 10.0,
+              shadowColor: Colors.black,
+            ),
+            body: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Form(
+                key: _formKey,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      'PigeonsTracker',
+                      'Create Tournament',
                       style: TextStyle(
-                          color: Colors.white,
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold),
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.pink,
+                      ),
                     ),
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 20.0),
-                      child: Text(
-                        ' (v3.25)',
-                        style: TextStyle(
-                          color: Colors.white.withOpacity(0.7),
-                          fontSize: 12,
+                    SizedBox(height: 20),
+                    TextFormField(
+                      controller: _tournamentsNameController,
+                      decoration: InputDecoration(
+                        labelText: 'Tournament Name*',
+                        border: UnderlineInputBorder(),
+                      ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please enter a tournament name';
+                        }
+                        return null;
+                      },
+                    ),
+                    SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: () => _pickDate(context, true),
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'Start',
+                            border: OutlineInputBorder(),
+                            suffixIcon: Icon(Icons.calendar_today),
+                          ),
+                          controller: TextEditingController(
+                              text: _startDate != null
+                                  ? '${_startDate!.month}/${_startDate!.day}/${_startDate!.year}'
+                                  : ''),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 20),
+                    GestureDetector(
+                      onTap: () => _pickDate(context, false),
+                      child: AbsorbPointer(
+                        child: TextFormField(
+                          decoration: InputDecoration(
+                            labelText: 'End',
+                            border: OutlineInputBorder(),
+                            suffixIcon: Icon(Icons.calendar_today),
+                          ),
+                          controller: TextEditingController(
+                              text: _endDate != null
+                                  ? '${_endDate!.month}/${_endDate!.day}/${_endDate!.year}'
+                                  : ''),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: 40),
+                    Center(
+                      child: SizedBox(
+                        width: double.infinity,
+                        height: 40,
+                        child: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Color.fromRGBO(56, 0, 109, 1),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                          ),
+                          onPressed: () async {
+                            await _saveTournament(); // Save the tournament
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(builder: (context) => MyTournaments()),
+                            ); // Navigate to MyTournaments page
+                          },
+                          child: Text(
+                            'SUBMIT',
+                            style: TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.bold,
+                              color: Colors.white,
+                            ),
+                          ),
                         ),
                       ),
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 18.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginScreen()));
-                          },
-                          icon: Icon(
-                            Icons.logout,
-                            color: Colors.white,
-                          )),
-                      IconButton(
-                          onPressed: () {},
-                          icon: Icon(
-                            Icons.language,
-                            color: Colors.white,
-                          )),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-            iconTheme: IconThemeData(
-              color: Colors.white, // Drawer icon color
-            ),
-            backgroundColor: Color.fromRGBO(56, 0, 109, 1),
-            elevation: 10.0,
-            shadowColor: Colors.black,
-          ),
-          body: Padding(
-            padding: const EdgeInsets.all(16.0),
-            child: Form(
-              key: _formKey,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    'Create Tournament',
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.pink,
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  TextFormField(
-                    controller: _tournamentsNameController,
-                    decoration: InputDecoration(
-                      labelText: 'Tournament Name*',
-                      border: UnderlineInputBorder(),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.isEmpty) {
-                        return 'Please enter a tournament name';
-                      }
-                      return null;
-                    },
-                  ),
-                  SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () => _pickDate(context, true),
-                    child: AbsorbPointer(
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'Start',
-                          border: OutlineInputBorder(),
-                          suffixIcon: Icon(Icons.calendar_today),
-                        ),
-                        controller: TextEditingController(
-                            text: _startDate != null
-                                ? '${_startDate!.month}/${_startDate!.day}/${_startDate!.year}'
-                                : ''),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 20),
-                  GestureDetector(
-                    onTap: () => _pickDate(context, false),
-                    child: AbsorbPointer(
-                      child: TextFormField(
-                        decoration: InputDecoration(
-                          labelText: 'End',
-                          border: OutlineInputBorder(),
-                          suffixIcon: Icon(Icons.calendar_today),
-                        ),
-                        controller: TextEditingController(
-                            text: _endDate != null
-                                ? '${_endDate!.month}/${_endDate!.day}/${_endDate!.year}'
-                                : ''),
-                      ),
-                    ),
-                  ),
-                  SizedBox(height: 40),
-                  Center(
-                    child: SizedBox(
-                      width: double.infinity,
-                      height: 40,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Color.fromRGBO(56, 0, 109, 1),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(8),
-                          ),
-                        ),
-                        onPressed: () async {
-                          await _saveTournament(); // Save the tournament
-                          Navigator.pushReplacement(
-                            context,
-                            MaterialPageRoute(builder: (context) => MyTournaments()),
-                          ); // Navigate to MyTournaments page
-                        },
-                        child: Text(
-                          'SUBMIT',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.white,
-                          ),
-                        ),
-                      ),
-                    ),
-                  ),
-                ],
               ),
             ),
           ),

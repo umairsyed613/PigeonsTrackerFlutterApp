@@ -34,7 +34,7 @@ class MyApp extends StatelessWidget {
         },
       home: AnimatedSplashScreen(
           splash: 'assets/images/1.gif',
-          splashIconSize: 150.0,
+          splashIconSize: 550.0,
           centered: true,
           backgroundColor: Colors.white,
           nextScreen: const HomeScreen(),

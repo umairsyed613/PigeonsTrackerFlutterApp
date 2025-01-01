@@ -81,6 +81,8 @@ class _HomeScreenState extends State<HomeScreen> {
     return WillPopScope(
       onWillPop: () async {
         if (_scaffoldKey.currentState!.isDrawerOpen) {
+
+
           Navigator.pop(context); // Close the drawer
           return true; // Prevent navigation
         }
