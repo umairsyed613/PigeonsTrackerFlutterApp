@@ -22,27 +22,30 @@ class TrackingRecord extends StatefulWidget {
 }
 
 class _TrackingRecordState extends State<TrackingRecord> {
-  builddialog(BuildContext context){
+  builddialog(BuildContext context) {
     showDialog(
         context: context,
-        builder: (builder){
+        builder: (builder) {
           return AlertDialog(
-            title: Text('Choose a Language',style: TextStyle(fontWeight: FontWeight.bold),),
+            title: Text(
+              'Choose a Language',
+              style: TextStyle(fontWeight: FontWeight.bold),
+            ),
             content: Container(
               width: double.maxFinite,
               child: ListView.separated(
                 shrinkWrap: true,
-                itemBuilder: (context,index){
+                itemBuilder: (context, index) {
                   return Padding(
                     padding: const EdgeInsets.all(8.0),
                     child: GestureDetector(
-                        onTap: (){
+                        onTap: () {
                           updatelanguage(locale[index]['locale']);
                         },
                         child: Text(locale[index]['name'])),
                   );
                 },
-                separatorBuilder: (context,index){
+                separatorBuilder: (context, index) {
                   return Divider(
                     color: Colors.black,
                   );
@@ -51,17 +54,19 @@ class _TrackingRecordState extends State<TrackingRecord> {
               ),
             ),
           );
-        }
-    );
+        });
   }
+
   final List locale = [
-    {'name':'ENGLISH','locale':Locale('en','US')},
-    {'name':'اردو','locale':Locale('ur','PK')},
+    {'name': 'ENGLISH', 'locale': Locale('en', 'US')},
+    {'name': 'اردو', 'locale': Locale('ur', 'PK')},
   ];
-  updatelanguage(Locale locale){
+
+  updatelanguage(Locale locale) {
     Get.back();
     Get.updateLocale(locale);
   }
+
   bool isExpanded = false;
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
@@ -113,9 +118,8 @@ class _TrackingRecordState extends State<TrackingRecord> {
         },
         child: SafeArea(
           child: Directionality(
-            textDirection: Locale == 'en'
-                ? TextDirection.rtl
-                : TextDirection.ltr,
+            textDirection:
+                Locale == 'en' ? TextDirection.rtl : TextDirection.ltr,
             child: Scaffold(
               key: _scaffoldKey,
               backgroundColor: Colors.white,
@@ -197,8 +201,10 @@ class _TrackingRecordState extends State<TrackingRecord> {
                     ),
                     ListTile(
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => HomeScreen()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => HomeScreen()));
                       },
                       tileColor: Colors.grey[350],
                       title: Text(
@@ -214,8 +220,10 @@ class _TrackingRecordState extends State<TrackingRecord> {
                     ),
                     ListTile(
                       onTap: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => Tournaments()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => Tournaments()));
                       },
                       title: Text(
                         'Tournaments',
@@ -472,7 +480,8 @@ class _TrackingRecordState extends State<TrackingRecord> {
                                 });
                                 ScaffoldMessenger.of(context).showSnackBar(
                                   SnackBar(
-                                      content: Text('Tracking Record Created!')),
+                                      content:
+                                          Text('Tracking Record Created!')),
                                 );
                               }
                             },
@@ -501,7 +510,8 @@ class _TrackingRecordState extends State<TrackingRecord> {
                             itemCount: _totalBirds,
                             itemBuilder: (context, index) {
                               return Padding(
-                                padding: const EdgeInsets.symmetric(vertical: 5.0),
+                                padding:
+                                    const EdgeInsets.symmetric(vertical: 5.0),
                                 child: Column(
                                   children: [
                                     Row(
@@ -511,13 +521,16 @@ class _TrackingRecordState extends State<TrackingRecord> {
                                           height: 40,
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
-                                            color: Color.fromRGBO(56, 0, 109, 1),
-                                            borderRadius: BorderRadius.circular(20),
+                                            color:
+                                                Color.fromRGBO(56, 0, 109, 1),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                           ),
                                           child: Text(
                                             "${index + 1}",
                                             style: TextStyle(
-                                                color: Colors.white, fontSize: 16),
+                                                color: Colors.white,
+                                                fontSize: 16),
                                           ),
                                         ),
                                         SizedBox(width: 10),
@@ -539,13 +552,16 @@ class _TrackingRecordState extends State<TrackingRecord> {
                                           height: 40,
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
-                                            color: Color.fromRGBO(56, 0, 109, 1),
-                                            borderRadius: BorderRadius.circular(20),
+                                            color:
+                                                Color.fromRGBO(56, 0, 109, 1),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                           ),
                                           child: Text(
                                             "${index + 2}",
                                             style: TextStyle(
-                                                color: Colors.white, fontSize: 16),
+                                                color: Colors.white,
+                                                fontSize: 16),
                                           ),
                                         ),
                                         SizedBox(width: 10),
@@ -567,13 +583,16 @@ class _TrackingRecordState extends State<TrackingRecord> {
                                           height: 40,
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
-                                            color: Color.fromRGBO(56, 0, 109, 1),
-                                            borderRadius: BorderRadius.circular(20),
+                                            color:
+                                                Color.fromRGBO(56, 0, 109, 1),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                           ),
                                           child: Text(
                                             "${index + 3}",
                                             style: TextStyle(
-                                                color: Colors.white, fontSize: 16),
+                                                color: Colors.white,
+                                                fontSize: 16),
                                           ),
                                         ),
                                         SizedBox(width: 10),
@@ -595,13 +614,16 @@ class _TrackingRecordState extends State<TrackingRecord> {
                                           height: 40,
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
-                                            color: Color.fromRGBO(56, 0, 109, 1),
-                                            borderRadius: BorderRadius.circular(20),
+                                            color:
+                                                Color.fromRGBO(56, 0, 109, 1),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                           ),
                                           child: Text(
                                             "${index + 4}",
                                             style: TextStyle(
-                                                color: Colors.white, fontSize: 16),
+                                                color: Colors.white,
+                                                fontSize: 16),
                                           ),
                                         ),
                                         SizedBox(width: 10),
@@ -623,13 +645,16 @@ class _TrackingRecordState extends State<TrackingRecord> {
                                           height: 40,
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
-                                            color: Color.fromRGBO(56, 0, 109, 1),
-                                            borderRadius: BorderRadius.circular(20),
+                                            color:
+                                                Color.fromRGBO(56, 0, 109, 1),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                           ),
                                           child: Text(
                                             "${index + 5}",
                                             style: TextStyle(
-                                                color: Colors.white, fontSize: 16),
+                                                color: Colors.white,
+                                                fontSize: 16),
                                           ),
                                         ),
                                         SizedBox(width: 10),
@@ -651,13 +676,16 @@ class _TrackingRecordState extends State<TrackingRecord> {
                                           height: 40,
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
-                                            color: Color.fromRGBO(56, 0, 109, 1),
-                                            borderRadius: BorderRadius.circular(20),
+                                            color:
+                                                Color.fromRGBO(56, 0, 109, 1),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                           ),
                                           child: Text(
                                             "${index + 6}",
                                             style: TextStyle(
-                                                color: Colors.white, fontSize: 16),
+                                                color: Colors.white,
+                                                fontSize: 16),
                                           ),
                                         ),
                                         SizedBox(width: 10),
@@ -679,13 +707,16 @@ class _TrackingRecordState extends State<TrackingRecord> {
                                           height: 40,
                                           alignment: Alignment.center,
                                           decoration: BoxDecoration(
-                                            color: Color.fromRGBO(56, 0, 109, 1),
-                                            borderRadius: BorderRadius.circular(20),
+                                            color:
+                                                Color.fromRGBO(56, 0, 109, 1),
+                                            borderRadius:
+                                                BorderRadius.circular(20),
                                           ),
                                           child: Text(
                                             "${index + 7}",
                                             style: TextStyle(
-                                                color: Colors.white, fontSize: 16),
+                                                color: Colors.white,
+                                                fontSize: 16),
                                           ),
                                         ),
                                         SizedBox(width: 10),
@@ -714,7 +745,8 @@ class _TrackingRecordState extends State<TrackingRecord> {
                                 Navigator.push(
                                     context,
                                     MaterialPageRoute(
-                                        builder: (context) => RecordTracking()));
+                                        builder: (context) =>
+                                            RecordTracking()));
                               },
                               child: Text(
                                 "SUBMIT",

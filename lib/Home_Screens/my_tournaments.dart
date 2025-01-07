@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:pigeon_tracker/Auth_Screens/login_screen.dart';
 import 'package:pigeon_tracker/Home_Screens/create_tournaments.dart';
+import 'package:pigeon_tracker/Home_Screens/showing_tournaments.dart';
 import 'package:sqflite/sqflite.dart';
 
 class MyTournaments extends StatefulWidget {
@@ -236,37 +237,39 @@ class _MyTournamentsState extends State<MyTournaments> {
                                     padding: const EdgeInsets.all(8.0),
                                     child: Card(
                                       elevation: 2,
-                                      child: ListTile(
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius: BorderRadius.circular(5)),
-                                        tileColor:
-                                            Color.fromARGB(100, 175, 113, 136),
-                                        leading: Icon(Icons.emoji_events_outlined,size: 35,),
-                                        trailing: IconButton(
-                                          onPressed: () => _showDeleteConfirmationDialog(tournament['id']),
-                                          icon: Icon(Icons.delete),
-                                        ),
+                                      child: GestureDetector(
+                                        child: ListTile(
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius: BorderRadius.circular(5)),
+                                          tileColor:
+                                              Color.fromARGB(100, 175, 113, 136),
+                                          leading: Icon(Icons.emoji_events_outlined,size: 35,),
+                                          trailing: IconButton(
+                                            onPressed: () => _showDeleteConfirmationDialog(tournament['id']),
+                                            icon: Icon(Icons.delete),
+                                          ),
 
-                                        title: Text(tournament['name'],style: TextStyle(
-                                          fontSize: 20,
-                                        ),),
-                                        subtitle: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Row(
-                                              children: [
-                                                Text('Start: '),
-                                                Text(tournament['start_date']),
-                                              ],
-                                            ),
-                                            Row(
-                                              children: [
-                                                Text('End: '),
-                                                Text(tournament['end_date']),
-                                              ],
-                                            ),
-                                          ],
+                                          title: Text(tournament['name'],style: TextStyle(
+                                            fontSize: 20,
+                                          ),),
+                                          subtitle: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.start,
+                                            children: [
+                                              Row(
+                                                children: [
+                                                  Text('Start: '),
+                                                  Text(tournament['start_date']),
+                                                ],
+                                              ),
+                                              Row(
+                                                children: [
+                                                  Text('End: '),
+                                                  Text(tournament['end_date']),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         ),
                                       ),
                                     ),
