@@ -1,15 +1,16 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pigeon_tracker/appbar_code.dart';
+import 'package:pigeon_tracker/Home_Screens/DiseasesAndCure/add_diseases.dart';
+import '../../appbar_code.dart';
 
-class InformationScreen extends StatefulWidget {
-  const InformationScreen({super.key});
+class DiseasesCure extends StatefulWidget {
+  const DiseasesCure({super.key});
 
   @override
-  State<InformationScreen> createState() => _InformationScreenState();
+  State<DiseasesCure> createState() => _DiseasesCureState();
 }
 
-class _InformationScreenState extends State<InformationScreen> {
+class _DiseasesCureState extends State<DiseasesCure> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -28,17 +29,17 @@ class _InformationScreenState extends State<InformationScreen> {
             child: Directionality(
           textDirection: Locale == 'en' ? TextDirection.rtl : TextDirection.ltr,
           child: Scaffold(
-            key: _scaffoldKey,
             backgroundColor: Colors.white,
+            key: _scaffoldKey,
           ),
         )),
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 8.0, right: 230),
+            padding: const EdgeInsets.only(top: 8.0, right: 150),
             child: Text(
-              'Information',
+              'Diseases And Cure',
               style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -46,11 +47,9 @@ class _InformationScreenState extends State<InformationScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(top: 18.0, left: 10),
             child: Text(
-              'Pigeons Tracker application help you store the'
-              'tournaments or practice match score and provide you'
-              'the ability to share the content with your friends and in groups',
+              'No Records found, please create new records by pressing the + button bellow',
               style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -59,6 +58,19 @@ class _InformationScreenState extends State<InformationScreen> {
           ),
         ],
       ),
+      floatingActionButton: FloatingActionButton(
+        child: Icon(
+          Icons.add,
+          color: Colors.white,
+        ),
+        onPressed: navigateToAddPage,
+        backgroundColor: Color.fromRGBO(56, 0, 109, 1),
+      ),
     );
+  }
+
+  void navigateToAddPage() {
+    final route = MaterialPageRoute(builder: (context) => AddDiseases());
+    Navigator.push(context, route);
   }
 }

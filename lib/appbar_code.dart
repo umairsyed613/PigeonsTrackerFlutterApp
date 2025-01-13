@@ -1,71 +1,79 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
-import 'package:pigeon_tracker/Auth_Screens/contact_screen.dart';
-import 'package:pigeon_tracker/Auth_Screens/information_screen.dart';
-import 'package:pigeon_tracker/Auth_Screens/login_screen.dart';
-import 'package:pigeon_tracker/Auth_Screens/setting_screen.dart';
-import 'package:pigeon_tracker/Home_Screens/Home_screen.dart';
-import 'package:pigeon_tracker/Home_Screens/create_tracking%20record.dart';
-import 'package:pigeon_tracker/Home_Screens/diseases_cure.dart';
-import 'package:pigeon_tracker/Home_Screens/my_tournaments.dart';
-import 'package:pigeon_tracker/Home_Screens/tournaments.dart';
+import 'Auth_Screens/contact_screen.dart';
+import 'Auth_Screens/information_screen.dart';
+import 'Auth_Screens/login_screen.dart';
+import 'Auth_Screens/setting_screen.dart';
+import 'Home_Screens/Home_screen.dart';
+import 'Home_Screens/DiseasesAndCure/diseases_cure.dart';
+import 'Home_Screens/MyTournaments/my_tournaments.dart';
+import 'Home_Screens/Practice/practice.dart';
+import 'Home_Screens/Tournaments/tournaments.dart';
 
-class Practice extends StatefulWidget {
-  const Practice({super.key});
+class AppbarCode extends StatefulWidget {
+  final String title;
+  final Widget body;
+  final Widget? floatingActionButton;
+
+  AppbarCode({
+    super.key,
+    required this.title,
+    required this.body,
+    this.floatingActionButton,
+    required WillPopScope child,
+  });
 
   @override
-  State<Practice> createState() => _PracticeState();
+  State<AppbarCode> createState() => _AppbarCodeState();
 }
 
-class _PracticeState extends State<Practice> {
-  builddialog(BuildContext context) {
+class _AppbarCodeState extends State<AppbarCode> {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
+  bool isExpanded = false;
+
+  void buildDialog(BuildContext context) {
+    final List locale = [
+      {'name': 'ENGLISH', 'locale': Locale('en', 'US')},
+      {'name': 'اردو', 'locale': Locale('ur', 'PK')},
+    ];
+
     showDialog(
-        context: context,
-        builder: (builder) {
-          return AlertDialog(
-            title: Text(
-              'Choose a Language',
-              style: TextStyle(fontWeight: FontWeight.bold),
+      context: context,
+      builder: (builder) {
+        return AlertDialog(
+          title: Text(
+            'Choose a Language',
+            style: TextStyle(fontWeight: FontWeight.bold),
+          ),
+          content: Container(
+            width: double.maxFinite,
+            child: ListView.separated(
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: GestureDetector(
+                      onTap: () {
+                        updateLanguage(locale[index]['locale']);
+                      },
+                      child: Text(locale[index]['name'])),
+                );
+              },
+              separatorBuilder: (context, index) {
+                return Divider(color: Colors.black);
+              },
+              itemCount: locale.length,
             ),
-            content: Container(
-              width: double.maxFinite,
-              child: ListView.separated(
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: GestureDetector(
-                        onTap: () {
-                          updatelanguage(locale[index]['locale']);
-                        },
-                        child: Text(locale[index]['name'])),
-                  );
-                },
-                separatorBuilder: (context, index) {
-                  return Divider(
-                    color: Colors.black,
-                  );
-                },
-                itemCount: locale.length,
-              ),
-            ),
-          );
-        });
+          ),
+        );
+      },
+    );
   }
 
-  final List locale = [
-    {'name': 'ENGLISH', 'locale': Locale('en', 'US')},
-    {'name': 'اردو', 'locale': Locale('ur', 'PK')},
-  ];
-
-  updatelanguage(Locale locale) {
+  void updateLanguage(Locale locale) {
     Get.back();
     Get.updateLocale(locale);
   }
-
-  bool isExpanded = false;
-  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   Widget build(BuildContext context) {
@@ -77,9 +85,9 @@ class _PracticeState extends State<Practice> {
         }
         return true; // Allow navigation
       },
-      child: SafeArea(
-          child: Directionality(
-        textDirection: Locale == 'en' ? TextDirection.rtl : TextDirection.ltr,
+      child: Directionality(
+        textDirection:
+        Locale == 'en' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
           backgroundColor: Colors.white,
           key: _scaffoldKey,
@@ -89,9 +97,8 @@ class _PracticeState extends State<Practice> {
               children: [
                 Row(
                   children: [
-                    // Icon(Icons.menu, color: Colors.white),// Space between icon and title
                     Text(
-                      'PigeonsTracker',
+                      widget.title.tr,
                       style: TextStyle(
                           color: Colors.white,
                           fontSize: 18,
@@ -109,42 +116,29 @@ class _PracticeState extends State<Practice> {
                     ),
                   ],
                 ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 18.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      IconButton(
-                          onPressed: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => LoginScreen()));
-                          },
-                          icon: Icon(
-                            Icons.logout,
-                            color: Colors.white,
-                          )),
-                      IconButton(
-                          onPressed: () {
-                            builddialog(context);
-                          },
-                          icon: Icon(
-                            Icons.language,
-                            color: Colors.white,
-                          )),
-                    ],
-                  ),
+                Row(
+                  children: [
+                    IconButton(
+                      onPressed: () {
+                        Navigator.push(context,
+                            MaterialPageRoute(builder: (context) => LoginScreen()));
+                      },
+                      icon: Icon(Icons.logout, color: Colors.white),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        buildDialog(context);
+                      },
+                      icon: Icon(Icons.language, color: Colors.white),
+                    ),
+                  ],
                 ),
               ],
             ),
-            iconTheme: IconThemeData(
-              color: Colors.white, // Drawer icon ka color
-            ),
+            iconTheme: IconThemeData(color: Colors.white),
             backgroundColor: Color.fromRGBO(56, 0, 109, 1),
-            // Purple Background
             elevation: 10.0,
-            shadowColor: Colors.black, // Shadow depth
+            shadowColor: Colors.black,
           ),
           drawer: Drawer(
             child: Column(
@@ -197,8 +191,7 @@ class _PracticeState extends State<Practice> {
                   ),
                   title: Text('Private'),
                   trailing: IconButton(
-                    icon: Icon(
-                        isExpanded ? Icons.expand_less : Icons.expand_more),
+                    icon: Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
                     onPressed: () {
                       setState(() {
                         isExpanded = !isExpanded; // Toggle expansion
@@ -223,7 +216,7 @@ class _PracticeState extends State<Practice> {
                                 MaterialPageRoute(
                                     builder: (context) => Practice()));
                             setState(() {
-                              isExpanded = false;
+                              isExpanded = true;
                             });
                           },
                         ),
@@ -239,7 +232,7 @@ class _PracticeState extends State<Practice> {
                                 MaterialPageRoute(
                                     builder: (context) => MyTournaments()));
                             setState(() {
-                              isExpanded = false;
+                              isExpanded = true;
                             });
                           },
                         ),
@@ -248,10 +241,8 @@ class _PracticeState extends State<Practice> {
                   ),
                 ListTile(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => DiseasesCure()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => DiseasesCure()));
                   },
                   title: Text(
                     'Diseases And Cure',
@@ -280,10 +271,8 @@ class _PracticeState extends State<Practice> {
                 ),
                 ListTile(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => ContactScreen()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => ContactScreen()));
                   },
                   title: Text(
                     'Contact',
@@ -296,10 +285,8 @@ class _PracticeState extends State<Practice> {
                 ),
                 ListTile(
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => SettingScreen()));
+                    Navigator.push(context,
+                        MaterialPageRoute(builder: (context) => SettingScreen()));
                   },
                   title: Text(
                     'Setting',
@@ -315,45 +302,10 @@ class _PracticeState extends State<Practice> {
             width: 250,
             backgroundColor: Colors.white,
           ),
-          body: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(right: 270.0, top: 10),
-                child: Text(
-                  'Practice',
-                  style: TextStyle(
-                      fontSize: 25,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.pinkAccent),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 18.0, left: 10),
-                child: Text(
-                  'No Records found, please create new records by pressing the + button bellow',
-                  style: TextStyle(
-                      fontSize: 15,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black54),
-                ),
-              ),
-            ],
-          ),
-          floatingActionButton: FloatingActionButton(
-            child: Icon(
-              Icons.add,
-              color: Colors.white,
-            ),
-            onPressed: navigateToAddPage,
-            backgroundColor: Color.fromRGBO(56, 0, 109, 1),
-          ),
+          body: widget.body,
+          floatingActionButton: widget.floatingActionButton,
         ),
-      )),
+      ),
     );
-  }
-
-  void navigateToAddPage() {
-    final route = MaterialPageRoute(builder: (context) => TrackingRecord());
-    Navigator.push(context, route);
   }
 }

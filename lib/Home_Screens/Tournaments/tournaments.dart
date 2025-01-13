@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pigeon_tracker/appbar_code.dart';
 
-class InformationScreen extends StatefulWidget {
-  const InformationScreen({super.key});
+class Tournaments extends StatefulWidget {
+  const Tournaments({super.key});
 
   @override
-  State<InformationScreen> createState() => _InformationScreenState();
+  State<Tournaments> createState() => _TournamentsState();
 }
 
-class _InformationScreenState extends State<InformationScreen> {
+class _TournamentsState extends State<Tournaments> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -28,17 +28,17 @@ class _InformationScreenState extends State<InformationScreen> {
             child: Directionality(
           textDirection: Locale == 'en' ? TextDirection.rtl : TextDirection.ltr,
           child: Scaffold(
-            key: _scaffoldKey,
             backgroundColor: Colors.white,
+            key: _scaffoldKey,
           ),
         )),
       ),
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 8.0, right: 230),
+            padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Information',
+              'Tournaments',
               style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -46,11 +46,9 @@ class _InformationScreenState extends State<InformationScreen> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.only(right: 30.0),
             child: Text(
-              'Pigeons Tracker application help you store the'
-              'tournaments or practice match score and provide you'
-              'the ability to share the content with your friends and in groups',
+              'Coming Soon....',
               style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,

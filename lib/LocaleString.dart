@@ -17,6 +17,7 @@ class LocaleString extends Translations{
       // 'cure text':"Cure",
       'discover text':"Discover",
       'use text':"How to use",
+      'record text':"No Records found, please create new records by pressing the + button below"
     },
     'ur_PK': {
       'Pg text':"کبوتر ٹریکر",
@@ -29,9 +30,9 @@ class LocaleString extends Translations{
       'prc text':"مشق کری۔",
       'dise text':"بیماریاں اور علاج",
       // 'cure text':"علاج",
-      'discover text':"دریافت کریں۔",
+      'discover text':"دریافت کریں",
       'use text':"استعمال کرنے کا طریقہ",
-
+      'record text':"کوئی ریکارڈ نہیں ملا، براہ کرم نیچے + بٹن دبا کر نئے ریکارڈ بنائیں۔",
     },
   };
 }
