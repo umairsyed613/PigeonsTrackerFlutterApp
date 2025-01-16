@@ -35,4 +35,4 @@ jobs:
       uses: actions/upload-artifact@v4
       with:
         name: pigeons-tracker.apk
-        path: build/app/outputs/flutter-apk/pigeons-tracker.apk
+        path: build/app/outputs/flutter-apk/app-release.apk
