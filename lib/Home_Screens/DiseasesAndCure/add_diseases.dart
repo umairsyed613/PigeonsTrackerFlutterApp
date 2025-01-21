@@ -38,7 +38,7 @@ class _AddDiseasesState extends State<AddDiseases> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Add Diseases and Cure',
+              'Add Diseases and Cure text'.tr,
               style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,

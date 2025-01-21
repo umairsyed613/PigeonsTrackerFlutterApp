@@ -44,7 +44,7 @@ class _SettingScreenState extends State<SettingScreen> {
               Padding(
                 padding: const EdgeInsets.only(right: 250.0),
                 child: Text(
-                  'Setting',
+                  'Setting text'.tr,
                   style: TextStyle(
                       fontSize: 25,
                       fontWeight: FontWeight.bold,
@@ -57,8 +57,8 @@ class _SettingScreenState extends State<SettingScreen> {
                   controller: _loftNameController,
                   maxLength: 8, // Limiting input to 8 characters
                   decoration: InputDecoration(
-                    hintText: "Loft Name",
-                    counterText: "Max: 8 characters",
+                    hintText: "Loft Name text".tr,
+                    counterText: "Max: 8 characters text".tr,
                     // Character limit hint
                     border: UnderlineInputBorder(),
                   ),
@@ -67,7 +67,7 @@ class _SettingScreenState extends State<SettingScreen> {
                       return 'This field is required.';
                     }
                     if (value.length > 8) {
-                      return 'Maximum 8 characters allowed.';
+                      return 'Maximum 8 characters allowed text'.tr;
                     }
                     return null;
                   },

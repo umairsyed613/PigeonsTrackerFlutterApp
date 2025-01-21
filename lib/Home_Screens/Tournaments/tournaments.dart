@@ -38,7 +38,7 @@ class _TournamentsState extends State<Tournaments> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Tournaments',
+              'Tournaments text'.tr,
               style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -48,7 +48,7 @@ class _TournamentsState extends State<Tournaments> {
           Padding(
             padding: const EdgeInsets.only(right: 30.0),
             child: Text(
-              'Coming Soon....',
+              'Coming Soon....'.tr,
               style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,

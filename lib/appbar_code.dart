@@ -34,7 +34,7 @@ class _AppbarCodeState extends State<AppbarCode> {
   void buildDialog(BuildContext context) {
     final List locale = [
       {'name': 'ENGLISH', 'locale': Locale('en', 'US')},
-      {'name': 'اردو', 'locale': Locale('ur', 'PK')},
+      {'name': 'URDU', 'locale': Locale('ur', 'PK')},
     ];
 
     showDialog(
@@ -42,7 +42,7 @@ class _AppbarCodeState extends State<AppbarCode> {
       builder: (builder) {
         return AlertDialog(
           title: Text(
-            'Choose a Language',
+            'Choose a Language text'.tr,
             style: TextStyle(fontWeight: FontWeight.bold),
           ),
           content: Container(
@@ -86,8 +86,7 @@ class _AppbarCodeState extends State<AppbarCode> {
         return true; // Allow navigation
       },
       child: Directionality(
-        textDirection:
-        Locale == 'en' ? TextDirection.rtl : TextDirection.ltr,
+        textDirection: Locale == 'en' ? TextDirection.rtl : TextDirection.ltr,
         child: Scaffold(
           backgroundColor: Colors.white,
           key: _scaffoldKey,
@@ -120,8 +119,10 @@ class _AppbarCodeState extends State<AppbarCode> {
                   children: [
                     IconButton(
                       onPressed: () {
-                        Navigator.push(context,
-                            MaterialPageRoute(builder: (context) => LoginScreen()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => LoginScreen()));
                       },
                       icon: Icon(Icons.logout, color: Colors.white),
                     ),
@@ -160,7 +161,7 @@ class _AppbarCodeState extends State<AppbarCode> {
                   },
                   tileColor: Colors.grey[350],
                   title: Text(
-                    'Home',
+                    'Home text'.tr,
                     style: TextStyle(
                       color: Color.fromRGBO(56, 0, 109, 1),
                     ),
@@ -176,7 +177,7 @@ class _AppbarCodeState extends State<AppbarCode> {
                         MaterialPageRoute(builder: (context) => Tournaments()));
                   },
                   title: Text(
-                    'Tournaments',
+                    'Tournaments text'.tr,
                     style: TextStyle(color: Colors.black),
                   ),
                   leading: Icon(
@@ -189,9 +190,10 @@ class _AppbarCodeState extends State<AppbarCode> {
                     Icons.directions_run,
                     color: Colors.grey[600],
                   ),
-                  title: Text('Private'),
+                  title: Text('Private text'.tr),
                   trailing: IconButton(
-                    icon: Icon(isExpanded ? Icons.expand_less : Icons.expand_more),
+                    icon: Icon(
+                        isExpanded ? Icons.expand_less : Icons.expand_more),
                     onPressed: () {
                       setState(() {
                         isExpanded = !isExpanded; // Toggle expansion
@@ -209,7 +211,7 @@ class _AppbarCodeState extends State<AppbarCode> {
                             Icons.monitor_heart,
                             color: Colors.grey[600],
                           ),
-                          title: Text('Practice'),
+                          title: Text('Practice text'.tr),
                           onTap: () {
                             Navigator.push(
                                 context,
@@ -225,7 +227,7 @@ class _AppbarCodeState extends State<AppbarCode> {
                             Icons.grid_view,
                             color: Colors.grey[600],
                           ),
-                          title: Text('My Tournaments'),
+                          title: Text('tour text'.tr),
                           onTap: () {
                             Navigator.push(
                                 context,
@@ -241,11 +243,13 @@ class _AppbarCodeState extends State<AppbarCode> {
                   ),
                 ListTile(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => DiseasesCure()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => DiseasesCure()));
                   },
                   title: Text(
-                    'Diseases And Cure',
+                    'dise text'.tr,
                     style: TextStyle(color: Colors.black),
                   ),
                   leading: Icon(
@@ -261,7 +265,7 @@ class _AppbarCodeState extends State<AppbarCode> {
                             builder: (context) => InformationScreen()));
                   },
                   title: Text(
-                    'Information',
+                    'Information text'.tr,
                     style: TextStyle(color: Colors.black),
                   ),
                   leading: Icon(
@@ -271,11 +275,13 @@ class _AppbarCodeState extends State<AppbarCode> {
                 ),
                 ListTile(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => ContactScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => ContactScreen()));
                   },
                   title: Text(
-                    'Contact',
+                    'Contact text'.tr,
                     style: TextStyle(color: Colors.black),
                   ),
                   leading: Icon(
@@ -285,11 +291,13 @@ class _AppbarCodeState extends State<AppbarCode> {
                 ),
                 ListTile(
                   onTap: () {
-                    Navigator.push(context,
-                        MaterialPageRoute(builder: (context) => SettingScreen()));
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => SettingScreen()));
                   },
                   title: Text(
-                    'Setting',
+                    'Setting text'.tr,
                     style: TextStyle(color: Colors.black),
                   ),
                   leading: Icon(

@@ -38,7 +38,7 @@ class _InformationScreenState extends State<InformationScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 8.0, right: 230),
             child: Text(
-              'Information',
+              'Information text'.tr,
               style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -48,9 +48,7 @@ class _InformationScreenState extends State<InformationScreen> {
           Padding(
             padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Pigeons Tracker application help you store the'
-              'tournaments or practice match score and provide you'
-              'the ability to share the content with your friends and in groups',
+              'Pigeons Tracker application help you store the tournaments or practice match score and provide you the ability to share the content with your friends and in groups text'.tr,
               style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,

@@ -39,7 +39,7 @@ class _DiseasesCureState extends State<DiseasesCure> {
           Padding(
             padding: const EdgeInsets.only(top: 8.0, right: 150),
             child: Text(
-              'Diseases And Cure',
+              'Diseases And Cure text'.tr,
               style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -49,7 +49,7 @@ class _DiseasesCureState extends State<DiseasesCure> {
           Padding(
             padding: const EdgeInsets.only(top: 18.0, left: 10),
             child: Text(
-              'No Records found, please create new records by pressing the + button bellow',
+              'No Records found, please create new records by pressing the + button bellow text'.tr,
               style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,

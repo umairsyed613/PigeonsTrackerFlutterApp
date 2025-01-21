@@ -66,7 +66,7 @@ class _CreateTournamentsState extends State<CreateTournaments> {
         SnackBar(content: Text('Tournament Created Successfully!')),
       );
 
-      // Clear the form
+
       _tournamentsNameController.clear();
       setState(() {
         _startDate = null;
@@ -106,7 +106,7 @@ class _CreateTournamentsState extends State<CreateTournaments> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Create Tournament',
+                'create text'.tr,
                 style: TextStyle(
                   fontSize: 24,
                   fontWeight: FontWeight.bold,
@@ -117,12 +117,12 @@ class _CreateTournamentsState extends State<CreateTournaments> {
               TextFormField(
                 controller: _tournamentsNameController,
                 decoration: InputDecoration(
-                  labelText: 'Tournament Name*',
+                  labelText: 'tour name text'.tr,
                   border: UnderlineInputBorder(),
                 ),
                 validator: (value) {
                   if (value == null || value.isEmpty) {
-                    return 'Please enter a tournament name';
+                    return 'Please enter a tournament name text'.tr;
                   }
                   return null;
                 },
@@ -133,7 +133,7 @@ class _CreateTournamentsState extends State<CreateTournaments> {
                 child: AbsorbPointer(
                   child: TextFormField(
                     decoration: InputDecoration(
-                      labelText: 'Start',
+                      labelText: 'start text'.tr,
                       border: OutlineInputBorder(),
                       suffixIcon: Icon(Icons.calendar_today),
                     ),
@@ -150,7 +150,7 @@ class _CreateTournamentsState extends State<CreateTournaments> {
                 child: AbsorbPointer(
                   child: TextFormField(
                     decoration: InputDecoration(
-                      labelText: 'End',
+                      labelText: 'end text'.tr,
                       border: OutlineInputBorder(),
                       suffixIcon: Icon(Icons.calendar_today),
                     ),
@@ -174,15 +174,17 @@ class _CreateTournamentsState extends State<CreateTournaments> {
                       ),
                     ),
                     onPressed: () async {
-                      await _saveTournament(); // Save the tournament
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(
-                            builder: (context) => MyTournaments()),
-                      ); // Navigate to MyTournaments page
+                      if (_formKey.currentState!.validate()) {
+                        await _saveTournament(); // Save the tournament
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => MyTournaments()),
+                        ); // Navigate to MyTournaments page
+                      }
                     },
                     child: Text(
-                      'SUBMIT',
+                      'sub text'.tr,
                       style: TextStyle(
                         fontSize: 16,
                         fontWeight: FontWeight.bold,

@@ -55,7 +55,7 @@ class _ContactScreenState extends State<ContactScreen> {
           Padding(
             padding: const EdgeInsets.only(top: 8.0, right: 255),
             child: Text(
-              'Contact',
+              'Contact text'.tr,
               style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -68,7 +68,7 @@ class _ContactScreenState extends State<ContactScreen> {
           Padding(
             padding: const EdgeInsets.only(right: 260.0),
             child: Text(
-              'How to use',
+              'use text'.tr,
               style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,

@@ -1,6 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pigeon_tracker/Home_Screens/Practice/create_tracking%20record.dart';
 import 'package:pigeon_tracker/appbar_code.dart';
+import 'package:sqflite/sqflite.dart';
+
+import 'create_tournaments.dart';
+
 class TournamentDetailsPage extends StatefulWidget {
   const TournamentDetailsPage({super.key});
 
@@ -12,23 +17,21 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   bool _isLoading = true;
   bool isExpanded = false;
-  final Map<String, dynamic> tournament = {
-    "name": "Abc",
-    "totalAverage": "00:00:00",
-    "start": "07 January 2025",
-    "end": "14 January 2025",
-    "flyingRecords": [
-      {
-        "totalBirds": 7,
-        "start": "07 January 2025 12:00 AM",
-      },
-    ],
-  };
+  List<Map<String, dynamic>> _tournaments = [];
+  final DatabaseHelper dbHelper = DatabaseHelper();
 
-  void _deleteRecord(int index) {
+  Future<void> _fetchTournaments() async {
+    Database db = await dbHelper.database;
+    List<Map<String, dynamic>> tournaments = await db.query('tournaments');
     setState(() {
-      tournament['flyingRecords'].removeAt(index);
+      _tournaments = tournaments;
+      _isLoading = false;
     });
+  }
+
+  void initState() {
+    super.initState();
+    _fetchTournaments();
   }
 
   @override
@@ -48,70 +51,74 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
           key: _scaffoldKey,
         ),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            // Tournament Name
-            Text(
-              tournament['name'],
-              style: TextStyle(
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-                color: Colors.pink,
-              ),
-            ),
-            SizedBox(height: 8),
-            // Tournament Details
-            Text(
-              "Total Average: ${tournament['totalAverage']}",
-              style: TextStyle(fontSize: 16),
-            ),
-            Text(
-              "Start: ${tournament['start']}",
-              style: TextStyle(fontSize: 16),
-            ),
-            Text(
-              "End: ${tournament['end']}",
-              style: TextStyle(fontSize: 16),
-            ),
-            SizedBox(height: 20),
-            // Flying Day Record Title
-            Text(
-              "Flying Day Record",
-              style: TextStyle(
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 8),
-            // Flying Day Records List
-            Expanded(
-              child: ListView.builder(
-                itemCount: tournament['flyingRecords'].length,
-                itemBuilder: (context, index) {
-                  final record = tournament['flyingRecords'][index];
-                  return Card(
-                    elevation: 3,
-                    margin: EdgeInsets.symmetric(vertical: 8),
-                    child: ListTile(
-                      leading: Icon(Icons.access_time, color: Colors.black),
-                      title: Text("Total Birds: ${record['totalBirds']}"),
-                      subtitle: Text("Start: ${record['start']}"),
-                      trailing: IconButton(
-                        icon: Icon(Icons.delete, color: Colors.red),
-                        onPressed: () {
-                          _deleteRecord(index);
-                        },
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Expanded(
+            child: ListView.builder(
+              itemCount: _tournaments.length,
+              itemBuilder: (context, index) {
+                final tournament = _tournaments[index];
+                return Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ListTile(
+                        title: Text(
+                          tournament['name'],
+                          style: const TextStyle(
+                            fontSize: 30,
+                            color: Colors.pinkAccent,
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              children: [
+                                const Text('Start: '),
+                                const SizedBox(width: 10),
+                                Text(tournament['start_date']),
+                              ],
+                            ),
+                            const SizedBox(height: 10),
+                            Row(
+                              children: [
+                                const Text('End: '),
+                                const SizedBox(width: 10),
+                                Text(tournament['end_date']),
+                              ],
+                            ),
+                          ],
+                        ),
                       ),
-                    ),
-                  );
-                },
-              ),
+                      const Divider(color: Colors.grey), // Light horizontal line
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10.0),
+                        child: Text(
+                          'No Records found, please create new records by pressing the + button below',
+                          style: const TextStyle(
+                            fontSize: 15,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.black54,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              },
             ),
-          ],
-        ),
+          ),
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add, color: Colors.white),
+        backgroundColor: const Color.fromRGBO(56, 0, 109, 1),
+        onPressed: () {
+          Navigator.push(context, MaterialPageRoute(builder: (context) => TrackingRecord()));
+        },
       ),
     );
   }

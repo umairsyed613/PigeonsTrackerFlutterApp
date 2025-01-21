@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pigeon_tracker/Home_Screens/Practice/record_tracking.dart';
 import 'package:pigeon_tracker/appbar_code.dart';
+import 'package:pigeon_tracker/database_helper_new.dart';
 
 class TrackingRecord extends StatefulWidget {
   const TrackingRecord({super.key});
@@ -15,7 +16,37 @@ class _TrackingRecordState extends State<TrackingRecord> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController totalBirdsController = TextEditingController();
-  TextEditingController _loftNameController = TextEditingController();
+
+  // TextEditingController _loftNameController = TextEditingController();
+  final TextEditingController _loftNameController = TextEditingController();
+  final TextEditingController _flyingDateController = TextEditingController();
+  final TextEditingController _flyingTimeController = TextEditingController();
+
+  Future<void> _saveRecord() async {
+    if (_loftNameController.text.isNotEmpty &&
+        _flyingDateController.text.isNotEmpty &&
+        _flyingTimeController.text.isNotEmpty) {
+      final record = {
+        'loftName': _loftNameController.text,
+        'flyingDate': _flyingDateController.text,
+        'flyingTime': _flyingTimeController.text,
+      };
+      await DatabaseHelperNew.instance.insertRecord(record);
+
+      // Show success message and clear fields
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Record saved successfully!')),
+      );
+      _loftNameController.clear();
+      _flyingDateController.clear();
+      _flyingTimeController.clear();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Please fill in all fields')),
+      );
+    }
+  }
+
   DateTime? _flyingStartDay;
   TimeOfDay? _flyingStartTime;
   int _totalBirds = 1;
@@ -103,41 +134,51 @@ class _TrackingRecordState extends State<TrackingRecord> {
                   },
                 ),
                 SizedBox(height: 20),
-                GestureDetector(
-                  onTap: () => _pickDate(context),
-                  child: AbsorbPointer(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Flying Start Day*',
-                        border: UnderlineInputBorder(),
-                        suffixIcon: Icon(Icons.calendar_today),
-                      ),
-                      controller: TextEditingController(
-                        text: _flyingStartDay != null
-                            ? '${_flyingStartDay!.day}.${_flyingStartDay!.month}.${_flyingStartDay!.year}'
-                            : '',
-                      ),
-                    ),
-                  ),
+                // GestureDetector(
+                //   onTap: () => _pickDate(context),
+                //   child: AbsorbPointer(
+                //     child:
+                TextField(
+                  controller: _flyingDateController,
+                  decoration:
+                      const InputDecoration(labelText: 'Flying Start Date'),
+                  onTap: () async {
+                    final date = await showDatePicker(
+                      context: context,
+                      initialDate: DateTime.now(),
+                      firstDate: DateTime(2000),
+                      lastDate: DateTime(2100),
+                    );
+                    if (date != null) {
+                      _flyingDateController.text =
+                          '${date.year}-${date.month}-${date.day}';
+                    }
+                  },
                 ),
+                //   ),
+                // ),
                 SizedBox(height: 10),
-                GestureDetector(
-                  onTap: () => _pickTime(context),
-                  child: AbsorbPointer(
-                    child: TextFormField(
-                      decoration: InputDecoration(
-                        labelText: 'Flying Start Time*',
-                        border: UnderlineInputBorder(),
-                        suffixIcon: Icon(Icons.access_time),
-                      ),
-                      controller: TextEditingController(
-                        text: _flyingStartTime != null
-                            ? _flyingStartTime!.format(context)
-                            : '',
-                      ),
-                    ),
-                  ),
+                // GestureDetector(
+                //   onTap: () => _pickTime(context),
+                //   child:
+                //   AbsorbPointer(
+                //     child:
+                TextField(
+                  controller: _flyingTimeController,
+                  decoration:
+                      const InputDecoration(labelText: 'Flying Start Time'),
+                  onTap: () async {
+                    final time = await showTimePicker(
+                      context: context,
+                      initialTime: TimeOfDay.now(),
+                    );
+                    if (time != null) {
+                      _flyingTimeController.text = time.format(context);
+                    }
+                  },
                 ),
+                //   ),
+                // ),
                 SizedBox(height: 20),
                 DropdownButtonFormField<int>(
                   value: _totalBirds,
@@ -187,6 +228,7 @@ class _TrackingRecordState extends State<TrackingRecord> {
                       ),
                     ),
                     onPressed: () {
+                      _saveRecord();
                       if (_formKey.currentState!.validate()) {
                         setState(() {
                           showBirdFields = true;
@@ -205,14 +247,15 @@ class _TrackingRecordState extends State<TrackingRecord> {
                     ),
                   ),
                 ),
-                if (showBirdFields) ...[
+                if (showBirdFields && _totalBirds != null) ...[
                   SizedBox(height: 20),
                   Text(
                     "Birds Information",
                     style: TextStyle(
-                        color: Color.fromRGBO(56, 0, 109, 1),
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold),
+                      color: Color.fromRGBO(56, 0, 109, 1),
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                    ),
                   ),
                   SizedBox(height: 20),
                   ListView.builder(
@@ -222,204 +265,31 @@ class _TrackingRecordState extends State<TrackingRecord> {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5.0),
-                        child: Column(
+                        child: Row(
                           children: [
-                            Row(
-                              children: [
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromRGBO(56, 0, 109, 1),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    "${index + 1}",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: TextFormField(
-                                    decoration: InputDecoration(
-                                      labelText: "Bird Name",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                            Container(
+                              width: 40,
+                              height: 40,
+                              alignment: Alignment.center,
+                              decoration: BoxDecoration(
+                                color: Color.fromRGBO(56, 0, 109, 1),
+                                borderRadius: BorderRadius.circular(20),
+                              ),
+                              child: Text(
+                                "${index + 1}",
+                                style: TextStyle(
+                                    color: Colors.white, fontSize: 16),
+                              ),
                             ),
-                            SizedBox(height: 5),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromRGBO(56, 0, 109, 1),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    "${index + 2}",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  ),
+                            SizedBox(width: 10),
+                            Expanded(
+                              child: TextFormField(
+                                decoration: InputDecoration(
+                                  labelText: "Bird Name",
+                                  border: OutlineInputBorder(),
                                 ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: TextFormField(
-                                    decoration: InputDecoration(
-                                      labelText: "Bird Name",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                ),
-                              ],
+                              ),
                             ),
-                            SizedBox(height: 5),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromRGBO(56, 0, 109, 1),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    "${index + 3}",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: TextFormField(
-                                    decoration: InputDecoration(
-                                      labelText: "Bird Name",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 5),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromRGBO(56, 0, 109, 1),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    "${index + 4}",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: TextFormField(
-                                    decoration: InputDecoration(
-                                      labelText: "Bird Name",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 5),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromRGBO(56, 0, 109, 1),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    "${index + 5}",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: TextFormField(
-                                    decoration: InputDecoration(
-                                      labelText: "Bird Name",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 5),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromRGBO(56, 0, 109, 1),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    "${index + 6}",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: TextFormField(
-                                    decoration: InputDecoration(
-                                      labelText: "Bird Name",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 5),
-                            Row(
-                              children: [
-                                Container(
-                                  width: 40,
-                                  height: 40,
-                                  alignment: Alignment.center,
-                                  decoration: BoxDecoration(
-                                    color: Color.fromRGBO(56, 0, 109, 1),
-                                    borderRadius: BorderRadius.circular(20),
-                                  ),
-                                  child: Text(
-                                    "${index + 7}",
-                                    style: TextStyle(
-                                        color: Colors.white, fontSize: 16),
-                                  ),
-                                ),
-                                SizedBox(width: 10),
-                                Expanded(
-                                  child: TextFormField(
-                                    decoration: InputDecoration(
-                                      labelText: "Bird Name",
-                                      border: OutlineInputBorder(),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(height: 20),
                           ],
                         ),
                       );
@@ -431,10 +301,12 @@ class _TrackingRecordState extends State<TrackingRecord> {
                     height: 40,
                     child: ElevatedButton(
                       onPressed: () {
+                        _saveRecord;
                         Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                                builder: (context) => RecordTracking()));
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => RecordTracking()),
+                        );
                       },
                       child: Text(
                         "SUBMIT",
