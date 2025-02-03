@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:pigeon_tracker/appbar_code.dart';
 
 class RecordTracking extends StatefulWidget {
-  const RecordTracking({super.key});
+  const RecordTracking({super.key,});
 
   @override
   State<RecordTracking> createState() => _RecordTrackingState();
@@ -281,7 +281,7 @@ class _RecordTrackingState extends State<RecordTracking> {
                           filled: true,
                           fillColor: Colors.grey.shade100,
                           contentPadding:
-                              EdgeInsets.symmetric(vertical: 4, horizontal: 6),
+                          EdgeInsets.symmetric(vertical: 4, horizontal: 6),
                         ),
                       ),
                     ),
@@ -295,7 +295,7 @@ class _RecordTrackingState extends State<RecordTracking> {
                             borderSide: BorderSide(color: Colors.grey.shade300),
                           ),
                           contentPadding:
-                              EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                          EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                         ),
                       ),
                     ),
@@ -309,7 +309,7 @@ class _RecordTrackingState extends State<RecordTracking> {
                             borderSide: BorderSide(color: Colors.grey.shade300),
                           ),
                           contentPadding:
-                              EdgeInsets.symmetric(vertical: 8, horizontal: 10),
+                          EdgeInsets.symmetric(vertical: 8, horizontal: 10),
                         ),
                       ),
                     ),
@@ -369,12 +369,12 @@ class _RecordTrackingState extends State<RecordTracking> {
         },
         child: SafeArea(
             child: Directionality(
-          textDirection: Locale == 'en' ? TextDirection.rtl : TextDirection.ltr,
-          child: Scaffold(
-            key: _scaffoldKey,
-            backgroundColor: Colors.white,
-          ),
-        )),
+              textDirection: Locale == 'en' ? TextDirection.rtl : TextDirection.ltr,
+              child: Scaffold(
+                key: _scaffoldKey,
+                backgroundColor: Colors.white,
+              ),
+            )),
       ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),

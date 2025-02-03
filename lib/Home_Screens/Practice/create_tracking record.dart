@@ -1,6 +1,6 @@
-import 'package:flutter_switch/flutter_switch.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:pigeon_tracker/Home_Screens/Practice/practice.dart';
 import 'package:pigeon_tracker/Home_Screens/Practice/record_tracking.dart';
 import 'package:pigeon_tracker/appbar_code.dart';
 import 'package:pigeon_tracker/database_helper_new.dart';
@@ -15,25 +15,34 @@ class TrackingRecord extends StatefulWidget {
 class _TrackingRecordState extends State<TrackingRecord> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController totalBirdsController = TextEditingController();
-
-  // TextEditingController _loftNameController = TextEditingController();
   final TextEditingController _loftNameController = TextEditingController();
   final TextEditingController _flyingDateController = TextEditingController();
   final TextEditingController _flyingTimeController = TextEditingController();
+  final TextEditingController _babyBirdController = TextEditingController();
+  final List<TextEditingController> _birdNameControllers = [];
+
+  int _totalBirds = 1;
+  bool _isBabyBird = false;
+  bool showBirdFields = false;
 
   Future<void> _saveRecord() async {
-    if (_loftNameController.text.isNotEmpty &&
-        _flyingDateController.text.isNotEmpty &&
-        _flyingTimeController.text.isNotEmpty) {
+    if (_formKey.currentState!.validate()) {
+      List<String> birdNames =
+      _birdNameControllers.map((controller) => controller.text).toList();
+      String babyBirdName = _isBabyBird ? _babyBirdController.text : "No baby bird";
+
       final record = {
         'loftName': _loftNameController.text,
         'flyingDate': _flyingDateController.text,
         'flyingTime': _flyingTimeController.text,
+        // 'totalBirds': _totalBirds,
+        // 'babyBird': babyBirdName,
+        // 'birdNames': birdNames.join(','),
+
+
       };
       await DatabaseHelperNew.instance.insertRecord(record);
-
-      // Show success message and clear fields
+      print("Saving record: $record");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Record saved successfully!')),
       );
@@ -47,38 +56,14 @@ class _TrackingRecordState extends State<TrackingRecord> {
     }
   }
 
-  DateTime? _flyingStartDay;
-  TimeOfDay? _flyingStartTime;
-  int _totalBirds = 1;
-  bool _isBabyBird = false;
+  void _onSubmit() {
+    List<String> birdNames =
+    _birdNameControllers.map((controller) => controller.text).toList();
+    String babyBirdName =
+    _isBabyBird ? _babyBirdController.text : "No baby bird";
 
-  bool showBirdFields = false;
-  int totalBirds = 0;
-
-  Future<void> _pickDate(BuildContext context) async {
-    DateTime? picked = await showDatePicker(
-      context: context,
-      initialDate: DateTime.now(),
-      firstDate: DateTime(2000),
-      lastDate: DateTime(2100),
-    );
-    if (picked != null) {
-      setState(() {
-        _flyingStartDay = picked;
-      });
-    }
-  }
-
-  Future<void> _pickTime(BuildContext context) async {
-    TimeOfDay? picked = await showTimePicker(
-      context: context,
-      initialTime: TimeOfDay.now(),
-    );
-    if (picked != null) {
-      setState(() {
-        _flyingStartTime = picked;
-      });
-    }
+    print("Bird Names: $birdNames");
+    print("Baby Bird: $babyBirdName");
   }
 
   @override
@@ -86,23 +71,25 @@ class _TrackingRecordState extends State<TrackingRecord> {
     return AppbarCode(
       title: 'Pg text'.tr,
       child: WillPopScope(
-          onWillPop: () async {
-            if (_scaffoldKey.currentState!.isDrawerOpen) {
-              Navigator.pop(context); // Close the drawer
-              return true; // Prevent navigation
-            }
-            return true; // Allow navigation
-          },
-          child: SafeArea(
-            child: Directionality(
-              textDirection:
-                  Locale == 'en' ? TextDirection.rtl : TextDirection.ltr,
-              child: Scaffold(
-                key: _scaffoldKey,
-                backgroundColor: Colors.white,
-              ),
+        onWillPop: () async {
+          if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
+            Navigator.pop(context);
+            return false;
+          }
+          return true;
+        },
+        child: SafeArea(
+          child: Directionality(
+            textDirection: Get.locale?.languageCode == 'en'
+                ? TextDirection.ltr
+                : TextDirection.rtl,
+            child: Scaffold(
+              key: _scaffoldKey,
+              backgroundColor: Colors.white,
             ),
-          )),
+          ),
+        ),
+      ),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Form(
@@ -134,14 +121,10 @@ class _TrackingRecordState extends State<TrackingRecord> {
                   },
                 ),
                 SizedBox(height: 20),
-                // GestureDetector(
-                //   onTap: () => _pickDate(context),
-                //   child: AbsorbPointer(
-                //     child:
                 TextField(
                   controller: _flyingDateController,
                   decoration:
-                      const InputDecoration(labelText: 'Flying Start Date'),
+                  const InputDecoration(labelText: 'Flying Start Date'),
                   onTap: () async {
                     final date = await showDatePicker(
                       context: context,
@@ -151,22 +134,17 @@ class _TrackingRecordState extends State<TrackingRecord> {
                     );
                     if (date != null) {
                       _flyingDateController.text =
-                          '${date.year}-${date.month}-${date.day}';
+                      '${date.year}-${date.month}-${date.day}';
                     }
                   },
                 ),
                 //   ),
                 // ),
                 SizedBox(height: 10),
-                // GestureDetector(
-                //   onTap: () => _pickTime(context),
-                //   child:
-                //   AbsorbPointer(
-                //     child:
                 TextField(
                   controller: _flyingTimeController,
                   decoration:
-                      const InputDecoration(labelText: 'Flying Start Time'),
+                  const InputDecoration(labelText: 'Flying Start Time'),
                   onTap: () async {
                     final time = await showTimePicker(
                       context: context,
@@ -177,8 +155,6 @@ class _TrackingRecordState extends State<TrackingRecord> {
                     }
                   },
                 ),
-                //   ),
-                // ),
                 SizedBox(height: 20),
                 DropdownButtonFormField<int>(
                   value: _totalBirds,
@@ -188,7 +164,7 @@ class _TrackingRecordState extends State<TrackingRecord> {
                   ),
                   items: List.generate(
                     50,
-                    (index) => DropdownMenuItem(
+                        (index) => DropdownMenuItem(
                       value: index + 1,
                       child: Text('${index + 1}'),
                     ),
@@ -199,23 +175,22 @@ class _TrackingRecordState extends State<TrackingRecord> {
                     });
                   },
                 ),
-                SizedBox(height: 20),
-                Text('Baby Bird'),
                 SizedBox(height: 10),
-                FlutterSwitch(
-                  width: 55.0,
-                  height: 30.0,
-                  toggleSize: 20.0,
-                  value: _isBabyBird,
-                  borderRadius: 30.0,
-                  activeColor: Color.fromRGBO(56, 0, 109, 1),
-                  inactiveColor: Colors.grey.shade300,
-                  onToggle: (val) {
-                    setState(() {
-                      _isBabyBird = val;
-                    });
-                  },
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text("Baby Bird"),
+                    Switch(
+                      value: _isBabyBird,
+                      onChanged: (value) {
+                        setState(() {
+                          _isBabyBird = value;
+                        });
+                      },
+                    ),
+                  ],
                 ),
+
                 SizedBox(height: 30),
                 SizedBox(
                   width: double.infinity,
@@ -229,6 +204,7 @@ class _TrackingRecordState extends State<TrackingRecord> {
                     ),
                     onPressed: () {
                       _saveRecord();
+                      _onSubmit();
                       if (_formKey.currentState!.validate()) {
                         setState(() {
                           showBirdFields = true;
@@ -265,31 +241,54 @@ class _TrackingRecordState extends State<TrackingRecord> {
                     itemBuilder: (context, index) {
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5.0),
-                        child: Row(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Container(
-                              width: 40,
-                              height: 40,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: Color.fromRGBO(56, 0, 109, 1),
-                                borderRadius: BorderRadius.circular(20),
-                              ),
-                              child: Text(
-                                "${index + 1}",
-                                style: TextStyle(
-                                    color: Colors.white, fontSize: 16),
-                              ),
+                            Row(
+                              children: [
+                                Container(
+                                  width: 40,
+                                  height: 40,
+                                  alignment: Alignment.center,
+                                  decoration: BoxDecoration(
+                                    color: Color.fromRGBO(56, 0, 109, 1),
+                                    borderRadius: BorderRadius.circular(20),
+                                  ),
+                                  child: Text(
+                                    "${index + 1}",
+                                    style: TextStyle(
+                                        color: Colors.white, fontSize: 16),
+                                  ),
+                                ),
+                                SizedBox(width: 10),
+                                Expanded(
+                                  child: TextFormField(
+                                    decoration: InputDecoration(
+                                      labelText: "Bird Name",
+                                      border: OutlineInputBorder(),
+                                    ),
+                                  ),
+                                ),
+                              ],
                             ),
-                            SizedBox(width: 10),
-                            Expanded(
-                              child: TextFormField(
+                            if (_isBabyBird && index == _totalBirds - 1) ...[
+                              SizedBox(height: 20),
+                              Text(
+                                "Baby Bird",
+                                style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.bold,
+                                  color: Color.fromRGBO(56, 0, 109, 1),
+                                ),
+                              ),
+                              SizedBox(height: 10),
+                              TextFormField(
                                 decoration: InputDecoration(
-                                  labelText: "Bird Name",
+                                  labelText: "Baby Bird Name",
                                   border: OutlineInputBorder(),
                                 ),
                               ),
-                            ),
+                            ],
                           ],
                         ),
                       );
@@ -301,11 +300,14 @@ class _TrackingRecordState extends State<TrackingRecord> {
                     height: 40,
                     child: ElevatedButton(
                       onPressed: () {
-                        _saveRecord;
+                        print("Submit button pressed!");
+                        _saveRecord();
+                        print("Data saving process initiated!");
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                              builder: (context) => RecordTracking()),
+                            builder: (context) => RecordTracking(),
+                          ),
                         );
                       },
                       child: Text(

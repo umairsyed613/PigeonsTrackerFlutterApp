@@ -24,6 +24,15 @@ class _MyTournamentsState extends State<MyTournaments> {
     _fetchTournaments();
   }
 
+  Future<void> _fetchTournaments() async {
+    Database db = await dbHelper.database;
+    List<Map<String, dynamic>> tournaments = await db.query('tournaments');
+    setState(() {
+      _tournaments = tournaments;
+      _isLoading = false;
+    });
+  }
+
   Future<void> _showDeleteConfirmationDialog(int id) async {
     showDialog(
       context: context,
@@ -55,15 +64,6 @@ class _MyTournamentsState extends State<MyTournaments> {
         );
       },
     );
-  }
-
-  Future<void> _fetchTournaments() async {
-    Database db = await dbHelper.database;
-    List<Map<String, dynamic>> tournaments = await db.query('tournaments');
-    setState(() {
-      _tournaments = tournaments;
-      _isLoading = false;
-    });
   }
 
   Future<void> _deleteTournament(int id) async {
@@ -208,6 +208,6 @@ class _MyTournamentsState extends State<MyTournaments> {
     await Navigator.push(context, MaterialPageRoute(builder: (context) {
       return CreateTournaments();
     }));
-    _fetchTournaments(); // Refresh list after returning from CreateTournaments page
+    _fetchTournaments();
   }
 }
