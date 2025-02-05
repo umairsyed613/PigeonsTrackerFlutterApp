@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pigeon_tracker/Home_Screens/Practice/practice.dart';
 import 'package:pigeon_tracker/Home_Screens/Practice/record_tracking.dart';
 import 'package:pigeon_tracker/appbar_code.dart';
 import 'package:pigeon_tracker/database_helper_new.dart';
