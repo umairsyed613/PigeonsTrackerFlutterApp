@@ -34,11 +34,8 @@ class _TrackingRecordState extends State<TrackingRecord> {
         'loftName': _loftNameController.text,
         'flyingDate': _flyingDateController.text,
         'flyingTime': _flyingTimeController.text,
-        // 'totalBirds': _totalBirds,
-        // 'babyBird': babyBirdName,
-        // 'birdNames': birdNames.join(','),
-
-
+        'birdname': birdNames.join(','), // Save bird names as comma-separated string
+        'babybirdname': babyBirdName, // Save baby bird name
       };
       await DatabaseHelperNew.instance.insertRecord(record);
       print("Saving record: $record");
@@ -48,6 +45,8 @@ class _TrackingRecordState extends State<TrackingRecord> {
       _loftNameController.clear();
       _flyingDateController.clear();
       _flyingTimeController.clear();
+      _babyBirdController.clear();
+      _birdNameControllers.clear();
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all fields')),
@@ -137,8 +136,6 @@ class _TrackingRecordState extends State<TrackingRecord> {
                     }
                   },
                 ),
-                //   ),
-                // ),
                 SizedBox(height: 10),
                 TextField(
                   controller: _flyingTimeController,
@@ -189,40 +186,38 @@ class _TrackingRecordState extends State<TrackingRecord> {
                     ),
                   ],
                 ),
-
                 SizedBox(height: 30),
                 SizedBox(
-                  width: double.infinity,
-                  height: 40,
-                  child: ElevatedButton(
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Color.fromRGBO(56, 0, 109, 1),
-                      shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(8),
+                    width: double.infinity,
+                    height: 40,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Color.fromRGBO(56, 0, 109, 1),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(8),
+                        ),
                       ),
-                    ),
-                    onPressed: () {
-                      _saveRecord();
-                      _onSubmit();
-                      if (_formKey.currentState!.validate()) {
-                        setState(() {
-                          showBirdFields = true;
-                        });
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          SnackBar(content: Text('Tracking Record Created!')),
-                        );
-                      }
-                    },
-                    child: Text(
+                      onPressed: () {
+                        _saveRecord();
+                        _onSubmit();
+                    if (_formKey.currentState!.validate()) {
+                      setState(() {
+                        showBirdFields = true;
+                      });
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Tracking Record Created!')),
+                      );
+                     }
+                    }, child:  Text(
                       'SUBMIT',
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.white),
+                      ),
                     ),
-                  ),
                 ),
-                if (showBirdFields && _totalBirds != null) ...[
+                    if (showBirdFields && _totalBirds != null) ...[
                   SizedBox(height: 20),
                   Text(
                     "Birds Information",
@@ -238,6 +233,9 @@ class _TrackingRecordState extends State<TrackingRecord> {
                     physics: NeverScrollableScrollPhysics(),
                     itemCount: _totalBirds,
                     itemBuilder: (context, index) {
+                      if (_birdNameControllers.length <= index) {
+                        _birdNameControllers.add(TextEditingController());
+                      }
                       return Padding(
                         padding: const EdgeInsets.symmetric(vertical: 5.0),
                         child: Column(
@@ -262,6 +260,7 @@ class _TrackingRecordState extends State<TrackingRecord> {
                                 SizedBox(width: 10),
                                 Expanded(
                                   child: TextFormField(
+                                    controller: _birdNameControllers[index],
                                     decoration: InputDecoration(
                                       labelText: "Bird Name",
                                       border: OutlineInputBorder(),
@@ -282,6 +281,7 @@ class _TrackingRecordState extends State<TrackingRecord> {
                               ),
                               SizedBox(height: 10),
                               TextFormField(
+                                controller: _babyBirdController,
                                 decoration: InputDecoration(
                                   labelText: "Baby Bird Name",
                                   border: OutlineInputBorder(),
