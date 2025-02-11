@@ -1,3 +1,4 @@
+
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -18,7 +19,7 @@ class DatabaseHelperNew {
     final path = join(dbPath, filePath);
     return await openDatabase(
       path,
-      version: 2, // Version updated to handle schema changes
+      version: 3, // Version updated to handle schema changes
       onCreate: _createDB,
       onUpgrade: _upgradeDB, // Add onUpgrade to handle schema changes
     );
@@ -31,6 +32,7 @@ class DatabaseHelperNew {
         loftName TEXT NOT NULL,
         flyingDate TEXT NOT NULL,
         flyingTime TEXT NOT NULL,
+        totalBirds INTEGER NOT NULL,
         birdname TEXT,
         babybirdname TEXT
       )
@@ -43,6 +45,9 @@ class DatabaseHelperNew {
       await db.execute('ALTER TABLE records ADD COLUMN birdname TEXT');
       await db.execute('ALTER TABLE records ADD COLUMN babybirdname TEXT');
     }
+    if (oldVersion < 3) {
+      await db.execute('ALTER TABLE records ADD COLUMN totalBirds INTEGER NOT NULL DEFAULT 0');
+    }
   }
 
   Future<int> insertRecord(Map<String, dynamic> record) async {
@@ -51,15 +56,16 @@ class DatabaseHelperNew {
   }
 
   Future<List<Map<String, dynamic>>> fetchRecords() async {
-    Database db = await instance.database;
+    final db = await instance.database;
     return await db.query(
       'records',
-      columns: ['id', 'loftName', 'flyingDate', 'flyingTime', 'birdname', 'babybirdname'],
+      columns: ['id', 'loftName', 'flyingDate', 'flyingTime', 'totalBirds', 'birdname', 'babybirdname'],
+      orderBy: 'id DESC', // Fetch records in descending order of id
     );
   }
 
   Future<int> deleteRecords(int id) async {
-    Database db = await database;
+    final db = await instance.database;
     int deletedRows = await db.delete(
       'records',
       where: 'id = ?',

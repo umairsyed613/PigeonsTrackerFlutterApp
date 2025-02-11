@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pigeon_tracker/appbar_code.dart';
@@ -161,7 +162,7 @@ class _RecordTrackingState extends State<RecordTracking> {
         ),
         Expanded(
           child: ListView.builder(
-            itemCount: record['birdname'].split(',').length,
+            itemCount: record['totalBirds'], // Use totalBirds to determine row count
             itemBuilder: (context, index) {
               final birdNames = record['birdname'].split(',');
               return Table(
@@ -184,7 +185,7 @@ class _RecordTrackingState extends State<RecordTracking> {
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
-                        child: Text(birdNames[index]),
+                        child: Text(birdNames.length > index ? birdNames[index] : ''),
                       ),
                       Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -244,11 +245,11 @@ class _RecordTrackingState extends State<RecordTracking> {
       title: 'Pg text'.tr,
       child: WillPopScope(
         onWillPop: () async {
-          if (_scaffoldKey.currentState!.isDrawerOpen) {
-            Navigator.pop(context); // Close the drawer
-            return true; // Prevent navigation
+          if (_scaffoldKey.currentState?.isDrawerOpen ?? false) {
+            Navigator.pop(context);
+            return false;
           }
-          return true; // Allow navigation
+          return true;
         },
         child: SafeArea(
           child: Directionality(
