@@ -1,4 +1,3 @@
-
 import 'package:sqflite/sqflite.dart';
 import 'package:path/path.dart';
 
@@ -19,13 +18,14 @@ class DatabaseHelperNew {
     final path = join(dbPath, filePath);
     return await openDatabase(
       path,
-      version: 3, // Version updated to handle schema changes
+      version: 3,
       onCreate: _createDB,
-      onUpgrade: _upgradeDB, // Add onUpgrade to handle schema changes
+      // Agar aapko upgrade functionality chahiye to onUpgrade callback bhi add kar sakte hain.
     );
   }
 
   Future _createDB(Database db, int version) async {
+    // Modified SQL with additional columns:
     const sql = '''
       CREATE TABLE records (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -33,22 +33,23 @@ class DatabaseHelperNew {
         flyingDate TEXT NOT NULL,
         flyingTime TEXT NOT NULL,
         totalBirds INTEGER NOT NULL,
-        birdname TEXT,
-        babybirdname TEXT
+        birdsNames TEXT NOT NULL,
+        babybirdname TEXT NOT NULL
       )
     ''';
     await db.execute(sql);
   }
 
-  Future _upgradeDB(Database db, int oldVersion, int newVersion) async {
-    if (oldVersion < 2) {
-      await db.execute('ALTER TABLE records ADD COLUMN birdname TEXT');
-      await db.execute('ALTER TABLE records ADD COLUMN babybirdname TEXT');
-    }
-    if (oldVersion < 3) {
-      await db.execute('ALTER TABLE records ADD COLUMN totalBirds INTEGER NOT NULL DEFAULT 0');
-    }
-  }
+  // Agar aap upgrade karna chahte hain, to niche ka code uncomment aur use kar sakte hain.
+  // Future _upgradeDB(Database db, int oldVersion, int newVersion) async {
+  //   if (oldVersion < 2) {
+  //     await db.execute('ALTER TABLE records ADD COLUMN birdsNames TEXT');
+  //     await db.execute('ALTER TABLE records ADD COLUMN babybirdname TEXT');
+  //   }
+  //   if (oldVersion < 3) {
+  //     await db.execute('ALTER TABLE records ADD COLUMN totalBirds INTEGER NOT NULL DEFAULT 0');
+  //   }
+  // }
 
   Future<int> insertRecord(Map<String, dynamic> record) async {
     final db = await instance.database;
@@ -59,8 +60,16 @@ class DatabaseHelperNew {
     final db = await instance.database;
     return await db.query(
       'records',
-      columns: ['id', 'loftName', 'flyingDate', 'flyingTime', 'totalBirds', 'birdname', 'babybirdname'],
-      orderBy: 'id DESC', // Fetch records in descending order of id
+      columns: [
+        'id',
+        'loftName',
+        'flyingDate',
+        'flyingTime',
+        'totalBirds',
+        'birdsNames',
+        'babybirdname'
+      ],
+      orderBy: 'id DESC', // Records descending order (latest first)
     );
   }
 

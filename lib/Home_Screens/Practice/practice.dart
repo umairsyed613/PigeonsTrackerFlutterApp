@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pigeon_tracker/Home_Screens/Practice/record_tracking.dart';
+import 'package:pigeon_tracker/Home_Screens/Practice/create_tracking%20record.dart';
+import 'package:pigeon_tracker/Home_Screens/Practice/tracking_record.dart';
 import 'package:pigeon_tracker/appbar_code.dart';
 import 'package:pigeon_tracker/database_helper_new.dart';
 import 'package:sqflite/sqflite.dart';
-import 'create_tracking record.dart';
 
 class Practice extends StatefulWidget {
   const Practice({super.key});
@@ -41,21 +41,13 @@ class _PracticeState extends State<Practice> {
     }
   }
 
-
-
-  @override
-  void initState() {
-    super.initState();
-    _fetchRecords();
-  }
-
   Future<void> _showDeleteConfirmationDialog(int id) async {
     showDialog(
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
           title: const Text("Are you sure?"),
-          content: const Text("Do you want to delete this Records?"),
+          content: const Text("Do you want to delete this record?"),
           actions: [
             TextButton(
               onPressed: () => Navigator.of(context).pop(),
@@ -79,6 +71,20 @@ class _PracticeState extends State<Practice> {
     await db.delete('records', where: 'id = ?', whereArgs: [id]);
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Record deleted successfully.')),
+    );
+    _fetchRecords();
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchRecords();
+  }
+
+  void navigateToAddPage() async {
+    await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => const CreateTrackingRecord()),
     );
     _fetchRecords();
   }
@@ -108,7 +114,7 @@ class _PracticeState extends State<Practice> {
         ),
       ),
       body: RefreshIndicator(
-        onRefresh: () => _fetchRecords(),
+        onRefresh: _fetchRecords,
         child: Column(
           children: [
             Padding(
@@ -116,74 +122,75 @@ class _PracticeState extends State<Practice> {
               child: Text(
                 'Practice text'.tr,
                 style: TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.pinkAccent),
+                  fontSize: 25,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.pinkAccent,
+                ),
               ),
             ),
             Expanded(
               child: _isLoading
                   ? Center(child: CircularProgressIndicator())
                   : _records.isEmpty
-                      ? Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: Column(
-                            children: [
-                              Text(
-                                'No Records found. Create new records using the + button below.',
-                              ),
-                            ],
+                  ? Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  children: [
+                    Text(
+                      'No Records found. Create new records using the + button below.',
+                    ),
+                  ],
+                ),
+              )
+                  : ListView.builder(
+                itemCount: _records.length,
+                itemBuilder: (context, index) {
+                  final record = _records[index];
+                  return Card(
+                    elevation: 2,
+                    margin: const EdgeInsets.all(8.0),
+                    child: ListTile(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5),
+                      ),
+                      tileColor:
+                      const Color.fromARGB(100, 175, 113, 136),
+                      leading: const Icon(
+                        Icons.emoji_events_outlined,
+                        size: 35,
+                      ),
+                      trailing: IconButton(
+                        onPressed: () =>
+                            _showDeleteConfirmationDialog(record['id']),
+                        icon: const Icon(Icons.delete),
+                      ),
+                      title: Text(
+                        'Loft Name: ${record['loftName']}',
+                        style: const TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                      subtitle: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                              'Flying Start Date: ${record['flyingDate']}'),
+                          Text(
+                              'Flying Start Time: ${record['flyingTime']}'),
+                        ],
+                      ),
+                      onTap: () {
+                        print("Selected Record: $record");
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => const TrackingRecord(),
                           ),
-                        )
-                      : ListView.builder(
-                          itemCount: _records.length,
-                          itemBuilder: (context, index) {
-                            final record = _records[index];
-                            return Card(
-                              elevation: 2,
-                              margin: const EdgeInsets.all(8.0),
-                              child: ListTile(
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(5),
-                                ),
-                                tileColor:
-                                    const Color.fromARGB(100, 175, 113, 136),
-                                leading: const Icon(Icons.emoji_events_outlined,
-                                    size: 35),
-                                trailing: IconButton(
-                                  onPressed: () =>
-                                      _showDeleteConfirmationDialog(
-                                          record['id']),
-                                  icon: const Icon(Icons.delete),
-                                ),
-                                title: Text(
-                                  'Loft Name: ${record['loftName']}',
-                                  style: const TextStyle(
-                                      fontSize: 18,
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text(
-                                        'Flying Start Date: ${record['flyingDate']}'),
-                                    Text(
-                                        'Flying Start Time: ${record['flyingTime']}'),
-                                  ],
-                                ),
-                                onTap: () {
-                                  print("Selected Record: $record");
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => RecordTracking(),
-                                    ),
-                                  );
-                                },
-                              ),
-                            );
-                          },
-                        ),
+                        );
+                      },
+                    ),
+                  );
+                },
+              ),
             ),
           ],
         ),
@@ -197,12 +204,5 @@ class _PracticeState extends State<Practice> {
         ),
       ),
     );
-  }
-
-  void navigateToAddPage() async {
-    await Navigator.push(context, MaterialPageRoute(builder: (context) {
-      return TrackingRecord();
-    }));
-    _fetchRecords();
   }
 }

@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pigeon_tracker/Home_Screens/Practice/record_tracking.dart';
+import 'package:pigeon_tracker/Home_Screens/Practice/tracking_record.dart';
 import 'package:pigeon_tracker/appbar_code.dart';
-import 'package:pigeon_tracker/database_helper_new.dart';
+import '../../database_helper_new.dart';
 
-class TrackingRecord extends StatefulWidget {
-  const TrackingRecord({super.key});
+class CreateTrackingRecord extends StatefulWidget {
+  const CreateTrackingRecord({super.key});
 
   @override
-  State<TrackingRecord> createState() => _TrackingRecordState();
+  State<CreateTrackingRecord> createState() => _CreateTrackingRecordState();
 }
 
-class _TrackingRecordState extends State<TrackingRecord> {
+class _CreateTrackingRecordState extends State<CreateTrackingRecord> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _loftNameController = TextEditingController();
@@ -27,18 +27,23 @@ class _TrackingRecordState extends State<TrackingRecord> {
   Future<void> _saveRecord() async {
     if (_formKey.currentState!.validate()) {
       List<String> birdNames =
-      _birdNameControllers.map((controller) => controller.text).toList();
-      String babyBirdName = _isBabyBird ? _babyBirdController.text : "No baby bird";
+      _birdNameControllers.map((controller) => controller.text.trim()).toList();
+      String babyBirdName =
+      _isBabyBird ? _babyBirdController.text.trim() : "No baby bird";
 
       final record = {
-        'loftName': _loftNameController.text,
-        'flyingDate': _flyingDateController.text,
-        'flyingTime': _flyingTimeController.text,
-        'birdname': birdNames.join(','), // Save bird names as comma-separated string
-        'babybirdname': babyBirdName, // Save baby bird name
+        'loftName': _loftNameController.text.trim(),
+        'flyingDate': _flyingDateController.text.trim(),
+        'flyingTime': _flyingTimeController.text.trim(),
+        'totalBirds': _totalBirds,
+        'birdsNames': birdNames.join(','),
+        'babybirdname': babyBirdName,
       };
+
+
+      print("Saving record: $record");  // Debug print
+
       await DatabaseHelperNew.instance.insertRecord(record);
-      print("Saving record: $record");
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Record saved successfully!')),
       );
@@ -168,6 +173,8 @@ class _TrackingRecordState extends State<TrackingRecord> {
                   onChanged: (value) {
                     setState(() {
                       _totalBirds = value!;
+                      // Clear and rebuild bird controllers when totalBirds changes
+                      _birdNameControllers.clear();
                     });
                   },
                 ),
@@ -188,36 +195,37 @@ class _TrackingRecordState extends State<TrackingRecord> {
                 ),
                 SizedBox(height: 30),
                 SizedBox(
-                    width: double.infinity,
-                    height: 40,
-                    child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Color.fromRGBO(56, 0, 109, 1),
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
-                        ),
+                  width: double.infinity,
+                  height: 40,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromRGBO(56, 0, 109, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
                       ),
-                      onPressed: () {
-                        _saveRecord();
-                        _onSubmit();
-                    if (_formKey.currentState!.validate()) {
-                      setState(() {
-                        showBirdFields = true;
-                      });
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        SnackBar(content: Text('Tracking Record Created!')),
-                      );
-                     }
-                    }, child:  Text(
+                    ),
+                    onPressed: () {
+                      _saveRecord();
+                      _onSubmit();
+                      if (_formKey.currentState!.validate()) {
+                        setState(() {
+                          showBirdFields = true;
+                        });
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(content: Text('Tracking Record Created!')),
+                        );
+                      }
+                    },
+                    child: Text(
                       'SUBMIT',
                       style: TextStyle(
                           fontSize: 16,
                           fontWeight: FontWeight.bold,
                           color: Colors.white),
-                      ),
                     ),
+                  ),
                 ),
-                    if (showBirdFields && _totalBirds != null) ...[
+                if (showBirdFields && _totalBirds != null) ...[
                   SizedBox(height: 20),
                   Text(
                     "Birds Information",
@@ -265,10 +273,17 @@ class _TrackingRecordState extends State<TrackingRecord> {
                                       labelText: "Bird Name",
                                       border: OutlineInputBorder(),
                                     ),
+                                    validator: (value) {
+                                      if (value == null || value.isEmpty) {
+                                        return 'Enter bird name';
+                                      }
+                                      return null;
+                                    },
                                   ),
                                 ),
                               ],
                             ),
+                            // Show baby bird field only for the last row if _isBabyBird is true
                             if (_isBabyBird && index == _totalBirds - 1) ...[
                               SizedBox(height: 20),
                               Text(
@@ -286,6 +301,12 @@ class _TrackingRecordState extends State<TrackingRecord> {
                                   labelText: "Baby Bird Name",
                                   border: OutlineInputBorder(),
                                 ),
+                                validator: (value) {
+                                  if (_isBabyBird && (value == null || value.isEmpty)) {
+                                    return 'Enter baby bird name';
+                                  }
+                                  return null;
+                                },
                               ),
                             ],
                           ],
@@ -305,7 +326,7 @@ class _TrackingRecordState extends State<TrackingRecord> {
                         Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => RecordTracking(),
+                            builder: (context) => TrackingRecord(),
                           ),
                         );
                       },

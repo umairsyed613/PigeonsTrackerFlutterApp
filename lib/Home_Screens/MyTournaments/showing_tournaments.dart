@@ -117,7 +117,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
         child: const Icon(Icons.add, color: Colors.white),
         backgroundColor: const Color.fromRGBO(56, 0, 109, 1),
         onPressed: () {
-          Navigator.push(context, MaterialPageRoute(builder: (context) => TrackingRecord()));
+          Navigator.push(context, MaterialPageRoute(builder: (context) => CreateTrackingRecord()));
         },
       ),
     );

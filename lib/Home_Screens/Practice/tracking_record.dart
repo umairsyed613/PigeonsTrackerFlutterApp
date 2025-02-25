@@ -1,17 +1,16 @@
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:pigeon_tracker/appbar_code.dart';
 import '../../database_helper_new.dart';
 
-class RecordTracking extends StatefulWidget {
-  const RecordTracking({super.key});
+class TrackingRecord extends StatefulWidget {
+  const TrackingRecord({super.key});
 
   @override
-  State<RecordTracking> createState() => _RecordTrackingState();
+  State<TrackingRecord> createState() => _TrackingRecordState();
 }
 
-class _RecordTrackingState extends State<RecordTracking> {
+class _TrackingRecordState extends State<TrackingRecord> {
   bool _isLoading = true;
   List<Map<String, dynamic>> _records = [];
   bool isEditMode = false;
@@ -48,11 +47,25 @@ class _RecordTrackingState extends State<RecordTracking> {
       return Center(child: Text('No records found'));
     }
 
-    final record = _records.first; // Assuming only one record for simplicity
+    // Assuming only one record for simplicity
+    final record = _records.first;
+    print("Fetched record: $record");
+    print("Birds Names: ${record['birdsNames']}");
+    print("Baby Bird: ${record['babybirdname']}");
+
+    int totalBirds = record['totalBirds'] ?? 0;
+    // Use the correct column name for normal birds
+    List<String> birdNames = [];
+    if (record['birdsNames'] != null &&
+        record['birdsNames'].toString().isNotEmpty) {
+      birdNames = record['birdsNames'].toString().split(',');
+    }
+    record['babybirdname'] ?? '';
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
+        // Header and edit icon
         Row(
           children: [
             Text(
@@ -75,7 +88,7 @@ class _RecordTrackingState extends State<RecordTracking> {
               child: IconButton(
                 onPressed: () {
                   setState(() {
-                    isEditMode = !isEditMode; // Toggle the mode
+                    isEditMode = !isEditMode;
                   });
                 },
                 icon: Icon(Icons.edit, color: Colors.white),
@@ -84,6 +97,7 @@ class _RecordTrackingState extends State<RecordTracking> {
           ],
         ),
         SizedBox(height: 10),
+        // Loft name & start details
         Row(
           children: [
             Text(
@@ -160,57 +174,110 @@ class _RecordTrackingState extends State<RecordTracking> {
             ),
           ],
         ),
+        // Table Rows: Normal birds + baby bird row
         Expanded(
           child: ListView.builder(
-            itemCount: record['totalBirds'], // Use totalBirds to determine row count
+            itemCount: totalBirds + 1, // extra row for baby bird
             itemBuilder: (context, index) {
-              final birdNames = record['birdname'].split(',');
-              return Table(
-                columnWidths: const {
-                  0: FixedColumnWidth(50),
-                  1: FlexColumnWidth(),
-                  2: FixedColumnWidth(80),
-                  3: FixedColumnWidth(80),
-                },
-                border: TableBorder.all(color: Colors.grey.shade300),
-                children: [
-                  TableRow(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          '${index + 1}',
-                          textAlign: TextAlign.center,
+              if (index < totalBirds) {
+                return Table(
+                  columnWidths: const {
+                    0: FixedColumnWidth(50),
+                    1: FlexColumnWidth(),
+                    2: FixedColumnWidth(80),
+                    3: FixedColumnWidth(80),
+                  },
+                  border: TableBorder.all(color: Colors.grey.shade300),
+                  children: [
+                    TableRow(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            '${index + 1}',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(birdNames.length > index ? birdNames[index] : ''),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          '',
-                          textAlign: TextAlign.center,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            birdNames.length > index ? birdNames[index] : '',
+                          ),
                         ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Text(
-                          '',
-                          textAlign: TextAlign.center,
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            '',
+                            textAlign: TextAlign.center,
+                          ),
                         ),
-                      ),
-                    ],
-                  ),
-                ],
-              );
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            '',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              } else {
+                // Baby Bird Row: use correct column for baby bird name
+                return Table(
+                  columnWidths: const {
+                    0: FixedColumnWidth(50),
+                    1: FlexColumnWidth(),
+                    2: FixedColumnWidth(80),
+                    3: FixedColumnWidth(80),
+                  },
+                  border: TableBorder.all(color: Colors.grey.shade300),
+                  children: [
+                    TableRow(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            '1', // Number column for baby bird
+                            textAlign: TextAlign.center,
+                            style: TextStyle(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            record['babybirdname'] ?? '',
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            '',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: Text(
+                            '',
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ],
+                );
+              }
             },
           ),
         ),
+        // Total Average row below the table
         Padding(
           padding: const EdgeInsets.only(bottom: 250.0, left: 2, right: 2),
           child: Container(
+            height: 40,
+            width: double.infinity,
+            decoration: BoxDecoration(color: Colors.grey[200]),
             child: Row(
               children: [
                 SizedBox(width: 150),
@@ -225,9 +292,6 @@ class _RecordTrackingState extends State<RecordTracking> {
                 ),
               ],
             ),
-            height: 40,
-            width: double.infinity,
-            decoration: BoxDecoration(color: Colors.grey[200]),
           ),
         ),
       ],
@@ -235,7 +299,7 @@ class _RecordTrackingState extends State<RecordTracking> {
   }
 
   Widget buildEditMode() {
-    // Implement edit mode functionality here
+    // Implement edit mode functionality here if needed
     return Center(child: Text('Edit Mode'));
   }
 
