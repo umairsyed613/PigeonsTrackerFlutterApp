@@ -4,7 +4,9 @@ import 'package:path/path.dart';
 class DatabaseHelperNew {
   static final DatabaseHelperNew _instance = DatabaseHelperNew._init();
   static Database? _database;
+
   DatabaseHelperNew._init();
+
   static DatabaseHelperNew get instance => _instance;
 
   Future<Database> get database async {
@@ -20,12 +22,10 @@ class DatabaseHelperNew {
       path,
       version: 3,
       onCreate: _createDB,
-      // Agar aapko upgrade functionality chahiye to onUpgrade callback bhi add kar sakte hain.
     );
   }
 
   Future _createDB(Database db, int version) async {
-    // Modified SQL with additional columns:
     const sql = '''
       CREATE TABLE records (
         id INTEGER PRIMARY KEY AUTOINCREMENT,
@@ -39,17 +39,6 @@ class DatabaseHelperNew {
     ''';
     await db.execute(sql);
   }
-
-  // Agar aap upgrade karna chahte hain, to niche ka code uncomment aur use kar sakte hain.
-  // Future _upgradeDB(Database db, int oldVersion, int newVersion) async {
-  //   if (oldVersion < 2) {
-  //     await db.execute('ALTER TABLE records ADD COLUMN birdsNames TEXT');
-  //     await db.execute('ALTER TABLE records ADD COLUMN babybirdname TEXT');
-  //   }
-  //   if (oldVersion < 3) {
-  //     await db.execute('ALTER TABLE records ADD COLUMN totalBirds INTEGER NOT NULL DEFAULT 0');
-  //   }
-  // }
 
   Future<int> insertRecord(Map<String, dynamic> record) async {
     final db = await instance.database;
@@ -69,18 +58,27 @@ class DatabaseHelperNew {
         'birdsNames',
         'babybirdname'
       ],
-      orderBy: 'id DESC', // Records descending order (latest first)
+      orderBy: 'id DESC',
+    );
+  }
+
+  Future<void> updateRecord(Map<String, dynamic> record) async {
+    final db = await database;
+    await db.update(
+      'records',
+      record,
+      where: 'id = ?',
+      whereArgs: [record['id']],
     );
   }
 
   Future<int> deleteRecords(int id) async {
     final db = await instance.database;
-    int deletedRows = await db.delete(
+    return await db.delete(
       'records',
       where: 'id = ?',
       whereArgs: [id],
     );
-    print("Deleted rows: $deletedRows");
-    return deletedRows;
   }
 }
+

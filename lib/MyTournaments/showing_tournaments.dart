@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pigeon_tracker/Home_Screens/Practice/create_tracking%20record.dart';
-import 'package:pigeon_tracker/appbar_code.dart';
+import 'package:pigeon_tracker/Appbar/appbar_code.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../Practice/create_tracking record.dart';
 import 'create_tournaments.dart';
 
 class TournamentDetailsPage extends StatefulWidget {
@@ -119,7 +119,7 @@ class _TournamentDetailsPageState extends State<TournamentDetailsPage> {
         onPressed: () {
           Navigator.push(context, MaterialPageRoute(builder: (context) => CreateTrackingRecord()));
         },
-      ),
+      ), currentScreen: 'TournamentDetailsPage',
     );
   }
 }

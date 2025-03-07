@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pigeon_tracker/appbar_code.dart';
+import 'package:pigeon_tracker/Appbar/appbar_code.dart';
 
 class SettingScreen extends StatefulWidget {
   const SettingScreen({super.key});
@@ -101,7 +101,7 @@ class _SettingScreenState extends State<SettingScreen> {
             ],
           ),
         ),
-      ),
+      ), currentScreen: 'SettingScreen',
     );
   }
 }

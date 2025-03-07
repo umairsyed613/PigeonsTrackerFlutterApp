@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pigeon_tracker/appbar_code.dart';
+import 'package:pigeon_tracker/Appbar/appbar_code.dart';
 
 class AddDiseases extends StatefulWidget {
   const AddDiseases({super.key});
@@ -46,7 +46,7 @@ class _AddDiseasesState extends State<AddDiseases> {
             ),
           )
         ],
-      ),
+      ), currentScreen: 'AddDiseases',
     );
   }
 }

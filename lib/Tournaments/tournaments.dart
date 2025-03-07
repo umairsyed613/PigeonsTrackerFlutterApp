@@ -1,16 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pigeon_tracker/Home_Screens/DiseasesAndCure/add_diseases.dart';
-import '../../appbar_code.dart';
+import 'package:pigeon_tracker/Appbar/appbar_code.dart';
 
-class DiseasesCure extends StatefulWidget {
-  const DiseasesCure({super.key});
+class Tournaments extends StatefulWidget {
+  const Tournaments({super.key});
 
   @override
-  State<DiseasesCure> createState() => _DiseasesCureState();
+  State<Tournaments> createState() => _TournamentsState();
 }
 
-class _DiseasesCureState extends State<DiseasesCure> {
+class _TournamentsState extends State<Tournaments> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
@@ -37,9 +36,9 @@ class _DiseasesCureState extends State<DiseasesCure> {
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 8.0, right: 150),
+            padding: const EdgeInsets.all(8.0),
             child: Text(
-              'Diseases And Cure text'.tr,
+              'Tournaments text'.tr,
               style: TextStyle(
                   fontSize: 25,
                   fontWeight: FontWeight.bold,
@@ -47,9 +46,9 @@ class _DiseasesCureState extends State<DiseasesCure> {
             ),
           ),
           Padding(
-            padding: const EdgeInsets.only(top: 18.0, left: 10),
+            padding: const EdgeInsets.only(right: 30.0),
             child: Text(
-              'No Records found, please create new records by pressing the + button bellow text'.tr,
+              'Coming Soon....'.tr,
               style: TextStyle(
                   fontSize: 15,
                   fontWeight: FontWeight.bold,
@@ -57,20 +56,7 @@ class _DiseasesCureState extends State<DiseasesCure> {
             ),
           ),
         ],
-      ),
-      floatingActionButton: FloatingActionButton(
-        child: Icon(
-          Icons.add,
-          color: Colors.white,
-        ),
-        onPressed: navigateToAddPage,
-        backgroundColor: Color.fromRGBO(56, 0, 109, 1),
-      ),
+      ), currentScreen: 'Tournaments',
     );
-  }
-
-  void navigateToAddPage() {
-    final route = MaterialPageRoute(builder: (context) => AddDiseases());
-    Navigator.push(context, route);
   }
 }
