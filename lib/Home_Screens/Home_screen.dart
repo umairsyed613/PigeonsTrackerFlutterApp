@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
-import 'package:pigeon_tracker/Home_Screens/DiseasesAndCure/diseases_cure.dart';
-import 'package:pigeon_tracker/Home_Screens/MyTournaments/my_tournaments.dart';
-import 'package:pigeon_tracker/Home_Screens/Practice/practice.dart';
-import 'package:pigeon_tracker/Home_Screens/Tournaments/tournaments.dart';
+
 import 'package:youtube_player_flutter/youtube_player_flutter.dart';
 import 'package:get/get.dart';
 
-import '../appbar_code.dart';
+import '../DiseasesAndCure/diseases_cure.dart';
+import '../MyTournaments/my_tournaments.dart';
+import '../Practice/practice.dart';
+import '../Tournaments/tournaments.dart';
+import '../Appbar/appbar_code.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -314,7 +315,7 @@ class _HomeScreenState extends State<HomeScreen> {
             ),
           ],
         ),
-      ),
+      ), currentScreen: 'HomeScreen',
     );
   }
 }

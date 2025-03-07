@@ -1,25 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'Auth_Screens/contact_screen.dart';
-import 'Auth_Screens/information_screen.dart';
-import 'Auth_Screens/login_screen.dart';
-import 'Auth_Screens/setting_screen.dart';
-import 'Home_Screens/Home_screen.dart';
-import 'Home_Screens/DiseasesAndCure/diseases_cure.dart';
-import 'Home_Screens/MyTournaments/my_tournaments.dart';
-import 'Home_Screens/Practice/practice.dart';
-import 'Home_Screens/Tournaments/tournaments.dart';
+import '../Auth_Screens/contact_screen.dart';
+import '../Auth_Screens/information_screen.dart';
+import '../Auth_Screens/login_screen.dart';
+import '../Auth_Screens/setting_screen.dart';
+import '../DiseasesAndCure/diseases_cure.dart';
+import '../Home_Screens/Home_screen.dart';
+import '../MyTournaments/my_tournaments.dart';
+import '../Practice/practice.dart';
+import '../Tournaments/tournaments.dart';
 
 class AppbarCode extends StatefulWidget {
   final String title;
   final Widget body;
   final Widget? floatingActionButton;
+  final String currentScreen; // Add this parameter
 
   AppbarCode({
     super.key,
     required this.title,
     required this.body,
     this.floatingActionButton,
+    required this.currentScreen, // Add this parameter
     required WillPopScope child,
   });
 
@@ -145,7 +147,7 @@ class _AppbarCodeState extends State<AppbarCode> {
             child: Column(
               children: [
                 SizedBox(
-                  height: 20,
+                  height: 50,
                 ),
                 Image.asset(
                   'assets/images/1.png',
@@ -159,7 +161,9 @@ class _AppbarCodeState extends State<AppbarCode> {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => HomeScreen()));
                   },
-                  tileColor: Colors.grey[350],
+                  tileColor: widget.currentScreen == 'HomeScreen'
+                      ? Colors.grey[350]
+                      : null,
                   title: Text(
                     'Home text'.tr,
                     style: TextStyle(
@@ -176,6 +180,9 @@ class _AppbarCodeState extends State<AppbarCode> {
                     Navigator.push(context,
                         MaterialPageRoute(builder: (context) => Tournaments()));
                   },
+                  tileColor: widget.currentScreen == 'Tournaments'
+                      ? Colors.grey[350]
+                      : null,
                   title: Text(
                     'Tournaments text'.tr,
                     style: TextStyle(color: Colors.black),
@@ -212,6 +219,9 @@ class _AppbarCodeState extends State<AppbarCode> {
                             color: Colors.grey[600],
                           ),
                           title: Text('Practice text'.tr),
+                          tileColor: widget.currentScreen == 'Practice'
+                              ? Colors.grey[350]
+                              : null,
                           onTap: () {
                             Navigator.push(
                                 context,
@@ -228,6 +238,9 @@ class _AppbarCodeState extends State<AppbarCode> {
                             color: Colors.grey[600],
                           ),
                           title: Text('tour text'.tr),
+                          tileColor: widget.currentScreen == 'MyTournaments'
+                              ? Colors.grey[350]
+                              : null,
                           onTap: () {
                             Navigator.push(
                                 context,
@@ -248,6 +261,9 @@ class _AppbarCodeState extends State<AppbarCode> {
                         MaterialPageRoute(
                             builder: (context) => DiseasesCure()));
                   },
+                  tileColor: widget.currentScreen == 'DiseasesCure'
+                      ? Colors.grey[350]
+                      : null,
                   title: Text(
                     'dise text'.tr,
                     style: TextStyle(color: Colors.black),
@@ -264,6 +280,9 @@ class _AppbarCodeState extends State<AppbarCode> {
                         MaterialPageRoute(
                             builder: (context) => InformationScreen()));
                   },
+                  tileColor: widget.currentScreen == 'InformationScreen'
+                      ? Colors.grey[350]
+                      : null,
                   title: Text(
                     'Information text'.tr,
                     style: TextStyle(color: Colors.black),
@@ -280,6 +299,9 @@ class _AppbarCodeState extends State<AppbarCode> {
                         MaterialPageRoute(
                             builder: (context) => ContactScreen()));
                   },
+                  tileColor: widget.currentScreen == 'ContactScreen'
+                      ? Colors.grey[350]
+                      : null,
                   title: Text(
                     'Contact text'.tr,
                     style: TextStyle(color: Colors.black),
@@ -296,6 +318,9 @@ class _AppbarCodeState extends State<AppbarCode> {
                         MaterialPageRoute(
                             builder: (context) => SettingScreen()));
                   },
+                  tileColor: widget.currentScreen == 'SettingScreen'
+                      ? Colors.grey[350]
+                      : null,
                   title: Text(
                     'Setting text'.tr,
                     style: TextStyle(color: Colors.black),

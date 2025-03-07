@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pigeon_tracker/appbar_code.dart';
+import 'package:pigeon_tracker/Appbar/appbar_code.dart';
 
 class InformationScreen extends StatefulWidget {
   const InformationScreen({super.key});
@@ -56,7 +56,7 @@ class _InformationScreenState extends State<InformationScreen> {
             ),
           ),
         ],
-      ),
+      ), currentScreen: 'InformationScreen',
     );
   }
 }

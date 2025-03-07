@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pigeon_tracker/Home_Screens/Practice/tracking_record.dart';
-import 'package:pigeon_tracker/appbar_code.dart';
-import '../../database_helper_new.dart';
+import 'package:pigeon_tracker/Practice/tracking_record.dart';
+import 'package:pigeon_tracker/Appbar/appbar_code.dart';
+import '../Database_Helper_New/database_helper_new.dart';
 
 class CreateTrackingRecord extends StatefulWidget {
   const CreateTrackingRecord({super.key});
@@ -25,34 +25,39 @@ class _CreateTrackingRecordState extends State<CreateTrackingRecord> {
   bool showBirdFields = false;
 
   Future<void> _saveRecord() async {
+    print("🟢 _saveRecord() called!"); // Debugging print
     if (_formKey.currentState!.validate()) {
-      List<String> birdNames =
-      _birdNameControllers.map((controller) => controller.text.trim()).toList();
+      List<String> birdNames = _birdNameControllers
+          .map((controller) => controller.text.trim())
+          .toList();
       String babyBirdName =
-      _isBabyBird ? _babyBirdController.text.trim() : "No baby bird";
+          _isBabyBird ? _babyBirdController.text.trim() : "No baby bird";
 
       final record = {
         'loftName': _loftNameController.text.trim(),
         'flyingDate': _flyingDateController.text.trim(),
         'flyingTime': _flyingTimeController.text.trim(),
         'totalBirds': _totalBirds,
-        'birdsNames': birdNames.join(','),
+        'birdsNames': birdNames.isNotEmpty ? birdNames.join(',') : 'No birds',
         'babybirdname': babyBirdName,
       };
 
+      print("🟢 Saving record: $record"); // Debugging print
 
-      print("Saving record: $record");  // Debug print
-
-      await DatabaseHelperNew.instance.insertRecord(record);
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Record saved successfully!')),
-      );
-      _loftNameController.clear();
-      _flyingDateController.clear();
-      _flyingTimeController.clear();
-      _babyBirdController.clear();
-      _birdNameControllers.clear();
+      int id = await DatabaseHelperNew.instance.insertRecord(record);
+      if (id > 0) {
+        print("✅ Record saved successfully! ID: $id"); // Debugging print
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Record saved successfully!')),
+        );
+      } else {
+        print("❌ Error saving record!"); // Debugging print
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Error saving record!')),
+        );
+      }
     } else {
+      print("❌ Form validation failed!"); // Debugging print
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Please fill in all fields')),
       );
@@ -61,9 +66,9 @@ class _CreateTrackingRecordState extends State<CreateTrackingRecord> {
 
   void _onSubmit() {
     List<String> birdNames =
-    _birdNameControllers.map((controller) => controller.text).toList();
+        _birdNameControllers.map((controller) => controller.text).toList();
     String babyBirdName =
-    _isBabyBird ? _babyBirdController.text : "No baby bird";
+        _isBabyBird ? _babyBirdController.text : "No baby bird";
 
     print("Bird Names: $birdNames");
     print("Baby Bird: $babyBirdName");
@@ -127,7 +132,7 @@ class _CreateTrackingRecordState extends State<CreateTrackingRecord> {
                 TextField(
                   controller: _flyingDateController,
                   decoration:
-                  const InputDecoration(labelText: 'Flying Start Date'),
+                      const InputDecoration(labelText: 'Flying Start Date'),
                   onTap: () async {
                     final date = await showDatePicker(
                       context: context,
@@ -137,7 +142,7 @@ class _CreateTrackingRecordState extends State<CreateTrackingRecord> {
                     );
                     if (date != null) {
                       _flyingDateController.text =
-                      '${date.year}-${date.month}-${date.day}';
+                          '${date.year}-${date.month}-${date.day}';
                     }
                   },
                 ),
@@ -145,7 +150,7 @@ class _CreateTrackingRecordState extends State<CreateTrackingRecord> {
                 TextField(
                   controller: _flyingTimeController,
                   decoration:
-                  const InputDecoration(labelText: 'Flying Start Time'),
+                      const InputDecoration(labelText: 'Flying Start Time'),
                   onTap: () async {
                     final time = await showTimePicker(
                       context: context,
@@ -165,7 +170,7 @@ class _CreateTrackingRecordState extends State<CreateTrackingRecord> {
                   ),
                   items: List.generate(
                     50,
-                        (index) => DropdownMenuItem(
+                    (index) => DropdownMenuItem(
                       value: index + 1,
                       child: Text('${index + 1}'),
                     ),
@@ -205,7 +210,6 @@ class _CreateTrackingRecordState extends State<CreateTrackingRecord> {
                       ),
                     ),
                     onPressed: () {
-                      _saveRecord();
                       _onSubmit();
                       if (_formKey.currentState!.validate()) {
                         setState(() {
@@ -302,7 +306,8 @@ class _CreateTrackingRecordState extends State<CreateTrackingRecord> {
                                   border: OutlineInputBorder(),
                                 ),
                                 validator: (value) {
-                                  if (_isBabyBird && (value == null || value.isEmpty)) {
+                                  if (_isBabyBird &&
+                                      (value == null || value.isEmpty)) {
                                     return 'Enter baby bird name';
                                   }
                                   return null;
@@ -351,7 +356,7 @@ class _CreateTrackingRecordState extends State<CreateTrackingRecord> {
             ),
           ),
         ),
-      ),
+      ), currentScreen: 'CreateTrackingRecord',
     );
   }
 }

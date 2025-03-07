@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pigeon_tracker/Home_Screens/MyTournaments/my_tournaments.dart';
-import 'package:pigeon_tracker/appbar_code.dart';
+import 'package:pigeon_tracker/Appbar/appbar_code.dart';
 import 'package:sqflite/sqflite.dart';
+
+import 'my_tournaments.dart';
 
 class CreateTournaments extends StatefulWidget {
   const CreateTournaments({super.key});
@@ -197,7 +198,7 @@ class _CreateTournamentsState extends State<CreateTournaments> {
             ],
           ),
         ),
-      ),
+      ), currentScreen: 'CreateTournaments',
     );
   }
 }

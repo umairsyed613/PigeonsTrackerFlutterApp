@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:pigeon_tracker/Home_Screens/Practice/create_tracking%20record.dart';
-import 'package:pigeon_tracker/Home_Screens/Practice/tracking_record.dart';
-import 'package:pigeon_tracker/appbar_code.dart';
-import 'package:pigeon_tracker/database_helper_new.dart';
+import 'package:pigeon_tracker/Practice/tracking_record.dart';
+import 'package:pigeon_tracker/Appbar/appbar_code.dart';
+import 'package:pigeon_tracker/Database_Helper_New/database_helper_new.dart';
 import 'package:sqflite/sqflite.dart';
+
+import 'create_tracking record.dart';
 
 class Practice extends StatefulWidget {
   const Practice({super.key});
@@ -202,7 +203,7 @@ class _PracticeState extends State<Practice> {
           Icons.add,
           color: Colors.white,
         ),
-      ),
+      ), currentScreen: 'Practice',
     );
   }
 }
