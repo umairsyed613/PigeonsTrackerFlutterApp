@@ -142,6 +142,7 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:pigeon_tracker/Appbar/appbar_code.dart';
 
 import 'Diseases_Cure_Database/db_controler.dart';
@@ -153,6 +154,7 @@ class AddDiseases extends StatelessWidget {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController diseaseController = TextEditingController();
   final TextEditingController cureController = TextEditingController();
+  final HtmlEditorController htmlController = HtmlEditorController();
 
   AddDiseases({super.key});
 
@@ -181,86 +183,106 @@ class AddDiseases extends StatelessWidget {
       ),
       body: Form(
         key: _formKey,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.only(left: 50, right: 50, top: 20),
-              child: Text(
-                'Add Diseases and Cure text'.tr,
-                style: const TextStyle(
-                    fontSize: 25,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.pinkAccent),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 35),
-              child: TextFormField(
-                controller: diseaseController,
-                decoration: const InputDecoration(
-                  labelText: 'Disease Name',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'Please enter the Disease name';
-                  }
-                  return null;
-                },
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.only(left: 20, right: 20, top: 10),
-              child: TextFormField(
-                controller: cureController,
-                decoration: const InputDecoration(
-                  labelText: 'Cure For Disease',
-                ),
-                validator: (value) {
-                  if (value == null || value.isEmpty) {
-                    return 'please enter the Cure';
-                  }
-                },
-              ),
-            ),
-            SizedBox(height: 40),
-            Padding(
-              padding: const EdgeInsets.only(left: 10, right: 10),
-              child: SizedBox(
-                width: double.infinity,
-                height: 40,
-                child: ElevatedButton(
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Color.fromRGBO(56, 0, 109, 1),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(8),
-                    ),
-                  ),
-                  onPressed: () async {
-                    if (diseaseController.text.isNotEmpty &&
-                        cureController.text.isNotEmpty) {
-                      final newDisease = DiseaseModel(
-                        diseaseName: diseaseController.text,
-                        cure: cureController.text,
-                      );
-                      await DBController().insertDisease(newDisease);
-                      Navigator.pushReplacement(
-                        context,
-                        MaterialPageRoute(builder: (_) => const DiseasesCure()),
-                      );
-                    }
-                  },
-                  child: Text(
-                    "SUBMIT",
-                    style: TextStyle(
-                      fontSize: 16,
+        child: SingleChildScrollView(
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.only(left: 50, right: 50, top: 20),
+                child: Text(
+                  'Add Diseases and Cure text'.tr,
+                  style: const TextStyle(
+                      fontSize: 25,
                       fontWeight: FontWeight.bold,
-                      color: Colors.white,
+                      color: Colors.pinkAccent),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 35),
+                child: TextFormField(
+                  controller: diseaseController,
+                  decoration: const InputDecoration(
+                    labelText: 'Disease Name',
+                  ),
+                  validator: (value) {
+                    if (value == null || value.isEmpty) {
+                      return 'Please enter the Disease name';
+                    }
+                    return null;
+                  },
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, top: 30),
+                child: HtmlEditor(
+                  controller: htmlController,
+                  htmlEditorOptions: HtmlEditorOptions(
+                    hint: "Enter Cure for Disease...",
+                    shouldEnsureVisible: true,
+                  ),
+                  otherOptions: OtherOptions(
+                    height: 300,
+                  ),
+                ),
+              ),
+              SizedBox(height: 40),
+              Padding(
+                padding: const EdgeInsets.only(left: 10, right: 10),
+                child: SizedBox(
+                  width: double.infinity,
+                  height: 40,
+                  child: ElevatedButton(
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Color.fromRGBO(56, 0, 109, 1),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                    ),
+                    // onPressed: () async {
+                    //   final cureHtml = await htmlController.getText();
+                    //   if (diseaseController.text.isNotEmpty &&
+                    //       cureController.text.isNotEmpty) {
+                    //     final newDisease = DiseaseModel(
+                    //       diseaseName: diseaseController.text,
+                    //       cure: cureController.text,
+                    //     );
+                    //     await DBController().insertDisease(newDisease);
+                    //     Navigator.pushReplacement(
+                    //       context,
+                    //       MaterialPageRoute(builder: (_) => const DiseasesCure()),
+                    //     );
+                    //   }
+                    // },
+                    onPressed: () async {
+                      final cureHtml = await htmlController
+                          .getText(); // Cure field ka HTML content
+                      if (diseaseController.text.isNotEmpty &&
+                          cureHtml.trim().isNotEmpty) {
+                        final newDisease = DiseaseModel(
+                          diseaseName: diseaseController.text,
+                          cure: cureHtml, // HTML format mein save hoga
+                        );
+                        await DBController().insertDisease(newDisease);
+
+                        Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (_) => const DiseasesCure()),
+                        );
+                      }
+                    },
+                    child: Text(
+                      "SUBMIT",
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white,
+                      ),
                     ),
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       currentScreen: 'AddDiseases',

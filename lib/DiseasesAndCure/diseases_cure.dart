@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:pigeon_tracker/Appbar/appbar_code.dart';
 
@@ -121,7 +122,7 @@ class _DiseasesCureState extends State<DiseasesCure> {
                           ),
                           tileColor: Color.fromARGB(100, 175, 113, 136),
                           title: Text(disease.diseaseName),
-                          subtitle: Text(disease.cure),
+                          subtitle: Html(data: disease.cure),
                           leading: Icon(
                             Icons.emoji_events_outlined,
                             size: 35,
