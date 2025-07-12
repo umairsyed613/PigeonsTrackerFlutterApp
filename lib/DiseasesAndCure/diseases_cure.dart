@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
 import 'package:get/get.dart';
 import 'package:pigeon_tracker/Appbar/appbar_code.dart';
+import 'package:pigeon_tracker/DiseasesAndCure/cure_show.dart';
 
 import 'Diseases_Cure_Database/db_controler.dart';
 import 'Diseases_Cure_Database/disease_model.dart';
@@ -34,6 +34,13 @@ class _DiseasesCureState extends State<DiseasesCure> {
   void deleteDisease(int id) async {
     await DBController().deleteDisease(id);
     fetchDiseases();
+  }
+
+  void loadDiseases() async {
+    final data = await DBController().getAllDiseases();
+    setState(() {
+      _diseases = data;
+    });
   }
 
   void showDeleteDialog(BuildContext context, int id) {
@@ -120,9 +127,24 @@ class _DiseasesCureState extends State<DiseasesCure> {
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(5),
                           ),
+                          onTap: () async {
+                            final result = await Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (_) => CureShow(
+                                  diseaseName: disease.diseaseName,
+                                  cure: disease.cure,
+                                  diseaseId: disease.id!,
+                                ),
+                              ),
+                            );
+                            if (result == 'updated') {
+                              loadDiseases();
+                            }
+                          },
                           tileColor: Color.fromARGB(100, 175, 113, 136),
                           title: Text(disease.diseaseName),
-                          subtitle: Html(data: disease.cure),
+                          // subtitle: Html(data: disease.cure),
                           leading: Icon(
                             Icons.emoji_events_outlined,
                             size: 35,

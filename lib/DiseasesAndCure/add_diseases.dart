@@ -149,14 +149,37 @@ import 'Diseases_Cure_Database/db_controler.dart';
 import 'Diseases_Cure_Database/disease_model.dart';
 import 'diseases_cure.dart';
 
-class AddDiseases extends StatelessWidget {
+class AddDiseases extends StatefulWidget {
+  final bool isEdit;
+  final DiseaseModel? disease;
+
+  AddDiseases({
+    super.key,
+    this.isEdit = false,
+    this.disease,
+  });
+
+  @override
+  State<AddDiseases> createState() => _AddDiseasesState();
+}
+
+class _AddDiseasesState extends State<AddDiseases> {
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   final _formKey = GlobalKey<FormState>();
-  final TextEditingController diseaseController = TextEditingController();
-  final TextEditingController cureController = TextEditingController();
-  final HtmlEditorController htmlController = HtmlEditorController();
+  late TextEditingController diseaseController = TextEditingController();
+  late TextEditingController cureController = TextEditingController();
+  late HtmlEditorController htmlController = HtmlEditorController();
 
-  AddDiseases({super.key});
+  @override
+  void initState() {
+    super.initState();
+
+    diseaseController = TextEditingController(
+      text: widget.isEdit ? widget.disease?.diseaseName ?? '' : '',
+    );
+
+    htmlController = HtmlEditorController();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -217,6 +240,8 @@ class AddDiseases extends StatelessWidget {
                   controller: htmlController,
                   htmlEditorOptions: HtmlEditorOptions(
                     hint: "Enter Cure for Disease...",
+                    initialText:
+                        widget.isEdit ? widget.disease?.cure ?? '' : '',
                     shouldEnsureVisible: true,
                   ),
                   otherOptions: OtherOptions(
@@ -253,21 +278,31 @@ class AddDiseases extends StatelessWidget {
                     //   }
                     // },
                     onPressed: () async {
-                      final cureHtml = await htmlController
-                          .getText(); // Cure field ka HTML content
+                      final cureHtml = await htmlController.getText();
                       if (diseaseController.text.isNotEmpty &&
                           cureHtml.trim().isNotEmpty) {
-                        final newDisease = DiseaseModel(
-                          diseaseName: diseaseController.text,
-                          cure: cureHtml, // HTML format mein save hoga
-                        );
-                        await DBController().insertDisease(newDisease);
+                        if (widget.isEdit) {
+                          final updatedDisease = DiseaseModel(
+                            id: widget.disease!.id,
+                            diseaseName: diseaseController.text,
+                            cure: cureHtml,
+                          );
+                          await DBController().updateDisease(updatedDisease);
+                          Navigator.pop(
+                              context, 'updated'); // 👈 very important
+                        } else {
+                          final newDisease = DiseaseModel(
+                            diseaseName: diseaseController.text,
+                            cure: cureHtml,
+                          );
+                          await DBController().insertDisease(newDisease);
 
-                        Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                              builder: (_) => const DiseasesCure()),
-                        );
+                          Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (_) => const DiseasesCure()),
+                          );
+                        }
                       }
                     },
                     child: Text(

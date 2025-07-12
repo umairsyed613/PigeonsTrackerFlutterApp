@@ -46,4 +46,25 @@ class DBController {
     final db = await database;
     return await db.delete('diseases', where: 'id = ?', whereArgs: [id]);
   }
+
+  Future<int> updateCure(int id, String updatedCure) async {
+    final db = await database;
+    return await db.update(
+      'diseases', // table name
+      {'cure': updatedCure},
+      where: 'id = ?',
+      whereArgs: [id],
+    );
+  }
+
+  Future<int> updateDisease(DiseaseModel disease) async {
+    final db = await database;
+
+    return await db.update(
+      'diseases', // ✅ Tumhara table ka naam
+      disease.toMap(), // ✅ DiseaseModel ka Map form
+      where: 'id = ?', // ✅ Jis row ko update karna
+      whereArgs: [disease.id],
+    );
+  }
 }
